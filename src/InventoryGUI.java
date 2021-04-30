@@ -35,6 +35,7 @@ public class InventoryGUI extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		
 		//the main program will not be closed upon closing this frame
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}

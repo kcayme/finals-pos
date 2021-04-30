@@ -132,19 +132,13 @@ public class MainPOS {
 		JMenuItem inventory = new JMenuItem("Inventory");
 		inventory.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				InventoryGUI inventory = new InventoryGUI();
-				inventory.setVisible(true);
-				inventory.setAlwaysOnTop(true);
-				inventory.setLocation(dim.width/2-inventory.getSize().width/2, dim.height/2-inventory.getSize().height/2);
+				LoginGUI.main(1);
 			}
 		});
 		JMenuItem cashReg = new JMenuItem("Cash Register");
 		cashReg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CashRegGUI cashReg = new CashRegGUI();
-				cashReg.setVisible(true);
-				cashReg.setAlwaysOnTop(true);
-				cashReg.setLocation(dim.width/2-cashReg.getSize().width/2, dim.height/2-cashReg.getSize().height/2);
+				LoginGUI.main(2);
 			}
 		});
 		adminMenu.add(inventory);
