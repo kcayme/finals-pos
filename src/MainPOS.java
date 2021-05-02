@@ -239,15 +239,6 @@ public class MainPOS {
 		gbc_separator.gridy = 5;
 		checkoutPanel.add(separator, gbc_separator);
 		
-		JScrollBar scrollBar = new JScrollBar();
-		GridBagConstraints gbc_scrollBar = new GridBagConstraints();
-		gbc_scrollBar.insets = new Insets(0, 0, 5, 0);
-		gbc_scrollBar.fill = GridBagConstraints.VERTICAL;
-		gbc_scrollBar.anchor = GridBagConstraints.WEST;
-		gbc_scrollBar.gridx = 6;
-		gbc_scrollBar.gridy = 6;
-		checkoutPanel.add(scrollBar, gbc_scrollBar);
-		
 		JPanel checkoutBottomPanel = new JPanel();
 		checkoutBottomPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		GridBagConstraints gbc_checkoutBottomPanel = new GridBagConstraints();
