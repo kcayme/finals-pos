@@ -56,7 +56,7 @@ public class InventoryGUI extends JFrame {
 	private JTextField stocksTF;
 	private JLabel lblPrice;
 	private JButton deleteBtn;
-	private JLabel messageFrame;
+	private JFrame messageFrame;
 	private JTextField brandTF;
 	private JButton updateBtn;
 	private JButton clearBtn;
@@ -81,7 +81,8 @@ public class InventoryGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public InventoryGUI() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 900, 600);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -203,16 +204,8 @@ public class InventoryGUI extends JFrame {
 		
 		logoutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//prompt if user is sure to close the program
-		        if (JOptionPane.showConfirmDialog(messageFrame, "Are you sure you want to Log out?", "Confirmation", JOptionPane.YES_NO_OPTION,
-		            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-		        	manager.updateFile(inventoryTable);
-		            System.exit(0);
-		        }
-		        else {
-		        	//the frame will not closed if "No" is chosen
-		        	setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		        }
+				manager.updateFile(inventoryTable);
+	        	dispose();
 			}
 		});
 		optionMenu.add(logoutItem);
@@ -479,22 +472,12 @@ public class InventoryGUI extends JFrame {
 					.addGap(46))
 		);
 		panel_1.setLayout(gl_panel_1);
-		//the main program will not be closed upon closing this frame
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 		    @Override
 		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		    	//prompt if user is sure to close the program
-		        if (JOptionPane.showConfirmDialog(messageFrame, "Are you sure you want to Log out?", "Confirmation", JOptionPane.YES_NO_OPTION,
-		            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-		        	manager.updateFile(inventoryTable);
-		            System.exit(0);
-		        }
-		        else {
-		        	//the frame will not closed if "No" is chosen
-		        	setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		        }
+		    	manager.updateFile(inventoryTable);
+	        	dispose();
 		    }
 		});
 		

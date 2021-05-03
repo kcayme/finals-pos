@@ -1,6 +1,9 @@
+import java.awt.Dimension;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,7 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-public class LoginGUI extends JFrame implements ActionListener {
+public class LoginGUI extends JFrame{
 
 	/**
 	 * 
@@ -27,29 +30,17 @@ public class LoginGUI extends JFrame implements ActionListener {
 	private static JButton button;
 	private static JButton cancel;
 	private static JLabel status;
-	
+	private static int number;
 	
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					LoginGUI frame = new LoginGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
 	 * @return 
 	 */
-	public LoginGUI() {
+	public LoginGUI(int number) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(80, 100, 330, 200);
 		contentPane = new JPanel();
@@ -59,6 +50,7 @@ public class LoginGUI extends JFrame implements ActionListener {
 		//the main program will not be closed upon closing this frame
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
+		setOptionShow(number);
 		login();
 	}
 	
@@ -84,12 +76,10 @@ public class LoginGUI extends JFrame implements ActionListener {
 		
 		button = new JButton("Login");
 		button.setBounds(60, 110, 80, 25);
-		button.addActionListener(this);
 		contentPane.add(button);
 		
 		cancel = new JButton("Cancel");
 		cancel.setBounds(160, 110, 80, 25);
-		cancel.addActionListener(this);
 		contentPane.add(cancel);
 		
 		status = new JLabel("");
@@ -98,22 +88,57 @@ public class LoginGUI extends JFrame implements ActionListener {
         status.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(status);
 		
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String user = userText.getText();
+				@SuppressWarnings("deprecation")
+				String password = passwordText.getText();
+			
+				if(user.equals("Admin") && password.equals("1234")) {
+					status.setText("Login successful!");
+					doOptionShow(number);
+					dispose();
+				}
+				else if(userText.getText().trim().isEmpty() || passwordText.getText().trim().isEmpty()) {
+					status.setText("Fields incomplete.");
+				}
+				else {
+					status.setText("Invalid username or password.");
+				}
+			}
+		});
+		
+		cancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		String user = userText.getText();
-		@SuppressWarnings("deprecation")
-		String password = passwordText.getText();
+	public void setOptionShow(int number)
+	{
+		LoginGUI.number = number;
+	}
+	
+	private void doOptionShow(int number)
+	{
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		
-		if(user.equals("Admin") && password.equals("1234")) {
-			status.setText("Login successful!");
+		if(number==2)
+		{
+			CashRegGUI cashreg = new CashRegGUI();
+			cashreg.setVisible(true);
+			cashreg.setAlwaysOnTop(true);
+			cashreg.setLocation(dim.width/2-cashreg.getSize().width/2, dim.height/2-cashreg.getSize().height/2);
 		}
-		else {
-			status.setText("Invalid username or password");
+		else
+		{
+			InventoryGUI inventory = new InventoryGUI();
+			inventory.setVisible(true);
+			inventory.setAlwaysOnTop(true);
+			inventory.setLocation(dim.width/2-inventory.getSize().width/2, dim.height/2-inventory.getSize().height/2);
 		}
-		
+		this.dispose();
 	}
 
 }
-
