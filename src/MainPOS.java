@@ -296,7 +296,7 @@ public class MainPOS {
 		
 		
 		//will be used later
-		/*frame.addWindowListener(new java.awt.event.WindowAdapter() {
+		frame.addWindowListener(new java.awt.event.WindowAdapter() {
 		    @Override
 		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 		    	//prompt if user is sure to close the program
@@ -308,6 +308,6 @@ public class MainPOS {
 		        	frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		        }
 		    }
-		});*/
+		});
 	}
 }
