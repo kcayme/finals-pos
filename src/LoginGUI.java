@@ -89,9 +89,9 @@ public class LoginGUI extends JFrame{
 		contentPane.add(status);
 		
 		button.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				String user = userText.getText();
-				@SuppressWarnings("deprecation")
 				String password = passwordText.getText();
 			
 				if(user.equals("Admin") && password.equals("1234")) {
