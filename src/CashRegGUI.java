@@ -65,7 +65,7 @@ public class CashRegGUI extends JFrame {
 		Label.setBounds(20, 104, 207, 38);
 		contentPane.add(Label);
 		
-		JLabel contentCashOnHand= new JLabel(String.valueOf(CashRegister.getCurrentBalance()));
+		JLabel contentCashOnHand= new JLabel(Float.toString(CashRegister.getCurrentBalance()));
 		contentCashOnHand.setFont(new Font("Tahoma", Font.BOLD, 19));
 		contentCashOnHand.setBounds(259, 104, 73, 38);
 		contentPane.add(contentCashOnHand);
