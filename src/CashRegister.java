@@ -7,70 +7,56 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 
-public class CashRegister {
+public class CashRegister implements FileHandling{
  
-File cashregisterfile = new File("cashregister.txt");
-static float cashOnHand = 0;
-
-
-	public static void main(String args[])
-	{
-		CashRegister test = new CashRegister(10);
-	}
-
-
-
-	public CashRegister(float CashIn)
-	{
-		
-		if(cashregisterfile.exists())
-			{
-				ReadFile();
-				acceptAmount(CashIn, 8);
-				AppendFile();
-			}
-		else
-			{
-				CreateFile();
-				ReadFile();
-				acceptAmount(CashIn, 8);
-				AppendFile();
-			}
-			 
-			
-		acceptAmount(CashIn, 8);
-		
+	File cashregisterfile = new File("cashregister.txt");
+	static double cashOnHand = 0;
+	MenuManager manager;
+	
+	public CashRegister(double payment, double cost, JTable table, String fileName) {
+		if(!cashregisterfile.exists())
+		{
+			createFile();
+		}
+		setManager(fileName, table);
+		readFile();	
+		acceptAmount(payment, cost, table);
+		updateFile();
 	}
 	
+	public CashRegister() {
+		if(!cashregisterfile.exists())
+		{
+			createFile();
+		}
+		readFile();	
+		updateFile();
+	}
 	
-	public static float getCurrentBalance()
+	public static double getCurrentBalance()
 	{    
-		ReadFile();
 		return cashOnHand;
 	}
 	
-	public void acceptAmount(float amountIn, float cost)
+	public void acceptAmount(double amountIn, double cost, JTable table)
 	{
-		cashOnHand += amountIn;
-		
 		if(amountIn >= cost)
 		{
-			float change = amountIn - cost;
-			
+			cashOnHand += amountIn;
+			double change = amountIn - cost;
+			cashOnHand -= change;
+			manager.updateFile();
 			JOptionPane.showMessageDialog(null, "Successful, Please get your change: Php " + change);
-			cashOnHand -= change;
 		}
-		if(amountIn<cost)
-		{
-			float change = amountIn;
-			JOptionPane.showMessageDialog(null, "Failed Purchase! Please get your money: Php " + change);
-			cashOnHand -= change;
+		else{
+			JOptionPane.showMessageDialog(null, "Failed Purchase! Please get your money: Php " + amountIn);
 		}
 	}
 	
-
-	private static void ReadFile()
+	@Override
+	public void readFile()
 	{
 		try
 		{
@@ -91,37 +77,37 @@ static float cashOnHand = 0;
 			}
 	}
 	
-	private void AppendFile()
+	@Override
+	public void updateFile()
 	{
 		try (FileWriter f = new FileWriter("cashRegister.txt");
 				BufferedWriter b = new BufferedWriter(f);
 				PrintWriter p = new PrintWriter(b);) 
 			 {
-			
+	
 				p.println(cashOnHand + ",Cash On Hand");
 				
 			
 			 } catch (IOException i) {i.printStackTrace();}
 	}
 	
-	private void CreateFile()
+	@Override
+	public void createFile()
 	{
 		try (FileWriter f = new FileWriter("cashRegister.txt");
 				BufferedWriter b = new BufferedWriter(f);
 				PrintWriter p = new PrintWriter(b);) 
 			 {
-				
-				float initialvalue = 5; 
+				float initialvalue = 100000; 
 				p.println(initialvalue + ",Cash On Hand;");
-				System.out.println("\nFile Created");
 			
 			 } catch (IOException i) {i.printStackTrace();}
 		 
 	}
 	
-	
-	
-	
+	public void setManager(String fileName, JTable table) {
+		manager = new MenuManager(fileName,table);
+	}
 	
 }
 

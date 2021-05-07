@@ -14,8 +14,11 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -29,13 +32,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-public class InventoryGUI extends JFrame {
+public class InventoryGUI extends JFrame{
 
 	/**
 	 * 
@@ -64,23 +70,11 @@ public class InventoryGUI extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					InventoryGUI frame = new InventoryGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
 	 */
-	public InventoryGUI() {
+	public InventoryGUI(JTable menuTable, JTable checkoutTable, JLabel lblTotalValue) {
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 900, 600);
@@ -132,22 +126,26 @@ public class InventoryGUI extends JFrame {
 			/**
 			 * 
 			 */
-			private static final long serialVersionUID = 172762057821372960L;
-			@SuppressWarnings("rawtypes")
-			Class[] columnTypes = new Class[] {
-				String.class, String.class, String.class, String.class, Integer.class, Double.class
+			private static final long serialVersionUID = 1L;
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false, false
 			};
-			@SuppressWarnings({ "unchecked", "rawtypes" })
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
 			}
 		});
+		inventoryTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+		inventoryTable.getColumnModel().getColumn(1).setPreferredWidth(120);
+		inventoryTable.getColumnModel().getColumn(2).setPreferredWidth(300);
+		inventoryTable.getColumnModel().getColumn(3).setPreferredWidth(124);
+		inventoryTable.getColumnModel().getColumn(4).setPreferredWidth(80);
+		inventoryTable.getColumnModel().getColumn(5).setPreferredWidth(80);
 		inventoryTable.setAutoCreateRowSorter(true);
 		
 		searchTF = new JTextField();
 		searchTF.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
 				TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
 				inventoryTable.setRowSorter(sorter);
@@ -183,28 +181,25 @@ public class InventoryGUI extends JFrame {
 		JComboBox<String> categoryCB = new JComboBox<String>();
 		categoryCB.setFont(new Font("Helvetica", Font.PLAIN, 12));
 		categoryCB.addItem("-Select Category-"	);
-		String[] categoryList = {"Men's Apparel","Women's Apparel","Appliances & Electronics" ,"Kids and Toys","School Supplies","Accessories"};
+		String[] categoryList = {"Men's Apparel","Women's Apparel","Appliances & Electronics" ,"Kids & Toys","School Supplies","Accessories"};
 		for(int i=0; i<categoryList.length; i++) {
 			categoryCB.addItem(categoryList[i]);
 		}
-		
-		inventoryTable.getColumnModel().getColumn(0).setPreferredWidth(150);
-		inventoryTable.getColumnModel().getColumn(1).setPreferredWidth(140);
-		inventoryTable.getColumnModel().getColumn(2).setPreferredWidth(287);
-		inventoryTable.getColumnModel().getColumn(3).setPreferredWidth(124);
-		inventoryTable.getColumnModel().getColumn(4).setPreferredWidth(80);
-		inventoryTable.getColumnModel().getColumn(5).setPreferredWidth(80);
 		//use DefaultTableModel object to manage contents of the JTable, this is necessary
 		DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
+		inventoryTable.setRowHeight(30);
 		scrollPane.setViewportView(inventoryTable);
 		
 		//create FileManager object for filehandling
-		FileManager manager = new FileManager("inventoryData.csv",inventoryTable);
+		InventoryManager manager = new InventoryManager("inventoryData.csv",inventoryTable);
+		MenuManager menu = new MenuManager("inventoryData.csv",menuTable);
 		manager.createFile();
+		sortTable(inventoryTable);
 		
 		logoutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				manager.updateFile(inventoryTable);
+				manager.setTable(inventoryTable);
+		    	manager.updateFile();
 	        	dispose();
 			}
 		});
@@ -266,50 +261,61 @@ public class InventoryGUI extends JFrame {
 		addBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//checks if the textfields are empty and the chosen option in the combobox is not the first option
-				if(!brandTF.getText().trim().isBlank() && !nameTF.getText().trim().isEmpty() && !stocksTF.getText().trim().isEmpty() && 
-						!priceTF.getText().trim().isEmpty() && categoryCB.getSelectedIndex() !=0) {
-					//try to parse text to integer and double or catch an error
-					try {
-						double price = Double.parseDouble(priceTF.getText());
-						int stocks = Integer.parseInt(stocksTF.getText());
-						//check if price and stock values are negatives
-						if(price < 0 || stocks < 0) {
+				setAlwaysOnTop(false);
+				String productName = nameTF.getText().trim().toUpperCase();
+				if(!manager.exists(productName)) {
+					if(!brandTF.getText().trim().isBlank() && !nameTF.getText().trim().isEmpty() && !stocksTF.getText().trim().isEmpty() && 
+							!priceTF.getText().trim().isEmpty() && categoryCB.getSelectedIndex() !=0) {
+						//try to parse text to integer and double or catch an error
+						try {
+							double price = Double.parseDouble(priceTF.getText());
+							int stocks = Integer.parseInt(stocksTF.getText());
+							//check if price and stock values are negatives
+							
+							if(price < 0 || stocks < 0) {
+								JOptionPane.showMessageDialog(messageFrame, "Invalid Input!", "Error", JOptionPane.ERROR_MESSAGE);
+							}
+							else {
+								Item item = new Item(brandTF.getText().trim(),nameTF.getText().trim(), categoryCB.getSelectedItem().toString(),
+										price,stocks,inventoryTable);
+								//create array of objects containing the data to be added in the table
+								Object[] data = {item.getSKU(),item.getBrand(),item.getName(),item.getCategory(),item.getstocks(),
+										item.getPrice()};
+								//add the object array to a row in JTable via DefaultTableMOdel object
+								model.addRow(data);
+								
+								JOptionPane.showMessageDialog(messageFrame, "Generated SKU: " + item.getSKU(), "Product Registration Successful", 
+										JOptionPane.INFORMATION_MESSAGE);
+							}
+						}
+						catch(Exception e1) {
+							
 							JOptionPane.showMessageDialog(messageFrame, "Invalid Input!", "Error", JOptionPane.ERROR_MESSAGE);
 						}
-						else {
-							Item item = new Item(brandTF.getText().trim(),nameTF.getText().trim(), categoryCB.getSelectedItem().toString(),
-									price,stocks,inventoryTable);
-							//create array of objects containing the data to be added in the table
-							Object[] data = {item.getSKU(),item.getBrand(),item.getName(),item.getCategory(),item.getstocks(),
-									item.getPrice()};
-							//add the object array to a row in JTable via DefaultTableMOdel object
-							model.addRow(data);
-							
-							JOptionPane.showMessageDialog(messageFrame, "Generated SKU: " + item.getSKU(), "Product Registration Successful", 
-									JOptionPane.INFORMATION_MESSAGE);
+						finally {
+							sortTable(inventoryTable);
+							brandTF.setText("");
+							nameTF.setText("");
+							stocksTF.setText("");
+							priceTF.setText("");
+							categoryCB.setSelectedIndex(0);
 						}
 					}
-					catch(Exception e1) {
-						
-						JOptionPane.showMessageDialog(messageFrame, "Invalid Input!", "Error", JOptionPane.ERROR_MESSAGE);
-					}
-					finally {
-						brandTF.setText("");
-						nameTF.setText("");
-						stocksTF.setText("");
-						priceTF.setText("");
-						categoryCB.setSelectedIndex(0);
+					else {
+						JOptionPane.showMessageDialog(messageFrame, "All details must be filled.", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 				else {
-					JOptionPane.showMessageDialog(messageFrame, "All details must be filled.", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(messageFrame, "Item already exists.", "Add Error", JOptionPane.ERROR_MESSAGE);
 				}
+				setAlwaysOnTop(true);
 			}
 		});
 		
 		deleteBtn = new JButton("Delete");
 		deleteBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setAlwaysOnTop(false);
 				int i = inventoryTable.getSelectedRow();
 				if(i == -1) {
 					JOptionPane.showMessageDialog(messageFrame, "Select a row to delete", "Error", JOptionPane.ERROR_MESSAGE);
@@ -320,6 +326,7 @@ public class InventoryGUI extends JFrame {
 						model.removeRow(i);
 					}
 				}
+				setAlwaysOnTop(true);
 			}
 		});
 		
@@ -333,6 +340,7 @@ public class InventoryGUI extends JFrame {
 		updateBtn = new JButton("Update");
 		updateBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setAlwaysOnTop(false);
 				//try to parse the Strings for stocks and price and catch error
 				try {
 					int i = inventoryTable.getSelectedRow();
@@ -361,10 +369,12 @@ public class InventoryGUI extends JFrame {
 						JOptionPane.showMessageDialog(messageFrame, "No changes ommited.", "Update Status", 
 								JOptionPane.INFORMATION_MESSAGE);
 					}
+					sortTable(inventoryTable);
 				}
 				catch(Exception e1) {
 					JOptionPane.showMessageDialog(messageFrame, "Product detail update failed.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
+				setAlwaysOnTop(true);
 			}
 		});
 
@@ -476,10 +486,29 @@ public class InventoryGUI extends JFrame {
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 		    @Override
 		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		    	manager.updateFile(inventoryTable);
+		    	setAlwaysOnTop(false);
+		    	manager.setTable(inventoryTable);
+		    	manager.updateFile();
+		    	DefaultTableModel menuModel = (DefaultTableModel) menuTable.getModel();
+		    	menuModel.setRowCount(0);
+		    	menu.readFile();
+		    	sortTable(menuTable);
+		    	
+		    	DecimalFormat formatter = new DecimalFormat("#,###.00");
+		    	menu.updateCheckout(checkoutTable);
+		    	double updatedTotal = menu.getTotal(checkoutTable);
+		    	lblTotalValue.setText("Php " + formatter.format(updatedTotal));
 	        	dispose();
 		    }
 		});
-		
+	}
+	
+	public void sortTable(JTable table) {
+		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>((DefaultTableModel) table.getModel());
+		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+		sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+		sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+		sorter.setRowFilter(null);
+		sorter.setSortKeys(sortKeys);
 	}
 }

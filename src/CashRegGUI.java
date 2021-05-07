@@ -10,6 +10,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import java.awt.SystemColor;
+import java.text.DecimalFormat;
 
 public class CashRegGUI extends JFrame {
 
@@ -35,7 +36,6 @@ public class CashRegGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public CashRegGUI() {
-		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -65,9 +65,12 @@ public class CashRegGUI extends JFrame {
 		Label.setBounds(20, 104, 207, 38);
 		contentPane.add(Label);
 		
-		JLabel contentCashOnHand= new JLabel(Float.toString(CashRegister.getCurrentBalance()));
+		DecimalFormat formatter = new DecimalFormat("#,###.00");
+		CashRegister cashReg = new CashRegister();
+		String displayCash = formatter.format(CashRegister.getCurrentBalance());
+		JLabel contentCashOnHand= new JLabel("P " + displayCash);
 		contentCashOnHand.setFont(new Font("Tahoma", Font.BOLD, 19));
-		contentCashOnHand.setBounds(259, 104, 73, 38);
+		contentCashOnHand.setBounds(228, 104, 177, 38);
 		contentPane.add(contentCashOnHand);
 		
 	}

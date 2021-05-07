@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -40,8 +41,8 @@ public class LoginGUI extends JFrame{
 	 * Create the frame.
 	 * @return 
 	 */
-	public LoginGUI(int number) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	public LoginGUI(int number, JTable menuTable, JTable checkoutTable, JLabel lblTotalValue) {
+		
 		setBounds(80, 100, 330, 200);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -49,12 +50,12 @@ public class LoginGUI extends JFrame{
 		setContentPane(contentPane);
 		//the main program will not be closed upon closing this frame
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
 		setOptionShow(number);
-		login();
+		login(menuTable,checkoutTable, lblTotalValue);
+		getRootPane().setDefaultButton(button);
 	}
 	
-	public void login() {
+	public void login(JTable menuTable, JTable checkoutTable, JLabel lblTotalValue) {
 		
 		contentPane.setLayout(null);
 		
@@ -96,8 +97,7 @@ public class LoginGUI extends JFrame{
 			
 				if(user.equals("Admin") && password.equals("1234")) {
 					status.setText("Login successful!");
-					doOptionShow(number);
-					dispose();
+					doOptionShow(number, menuTable,checkoutTable, lblTotalValue);
 				}
 				else if(userText.getText().trim().isEmpty() || passwordText.getText().trim().isEmpty()) {
 					status.setText("Fields incomplete.");
@@ -113,6 +113,7 @@ public class LoginGUI extends JFrame{
 				dispose();
 			}
 		});
+		
 	}
 
 	public void setOptionShow(int number)
@@ -120,25 +121,26 @@ public class LoginGUI extends JFrame{
 		LoginGUI.number = number;
 	}
 	
-	private void doOptionShow(int number)
+	private void doOptionShow(int number, JTable menuTable, JTable checkoutTable, JLabel lblTotalValue)
 	{
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		
 		if(number==2)
 		{
 			CashRegGUI cashreg = new CashRegGUI();
 			cashreg.setVisible(true);
 			cashreg.setAlwaysOnTop(true);
 			cashreg.setLocation(dim.width/2-cashreg.getSize().width/2, dim.height/2-cashreg.getSize().height/2);
+			this.dispose();
 		}
 		else
 		{
-			InventoryGUI inventory = new InventoryGUI();
+			InventoryGUI inventory = new InventoryGUI(menuTable, checkoutTable, lblTotalValue);
 			inventory.setVisible(true);
 			inventory.setAlwaysOnTop(true);
 			inventory.setLocation(dim.width/2-inventory.getSize().width/2, dim.height/2-inventory.getSize().height/2);
+			this.dispose();
 		}
-		this.dispose();
+		
 	}
 
 }

@@ -9,12 +9,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class FileManager {
+public class InventoryManager implements FileHandling{
 	private JFrame messageFrame;
 	private File file;
 	private JTable inventoryTable;
 	
-	public FileManager(String fileName, JTable table) {
+	public InventoryManager(String fileName, JTable table) {
 		this.setFile(fileName);
 		this.setTable(table);
 	}
@@ -30,6 +30,8 @@ public class FileManager {
 	public JTable getTable() {
 		return inventoryTable;
 	}
+	
+	@Override
 	public void createFile() {
 		if(file.exists()) {
 			try {
@@ -49,6 +51,7 @@ public class FileManager {
 			}
 		}
 	}
+	@Override
 	public void readFile() {
 		DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
 		FileReader reader;
@@ -74,11 +77,11 @@ public class FileManager {
 			JOptionPane.showMessageDialog(messageFrame, "Failed to read file.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	public void updateFile(JTable newTable) {
+	@Override
+	public void updateFile() {
 		File tempFile = new File("temp.csv");
 		//FileWriter and reader are instantiated to be utilized by the Buffered objects below
 		FileWriter writer;
-		this.setTable(newTable);
 		try {
 			writer = new FileWriter(tempFile);
 			//BufferedWriter is used to save large amount of data
@@ -98,5 +101,31 @@ public class FileManager {
 			JOptionPane.showMessageDialog(messageFrame, "Inventory failed to save.", "Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
+	}
+	public boolean exists(String name) {
+		boolean exists = false;
+		FileReader reader;
+		try {
+			reader = new FileReader(file);
+			BufferedReader br = new BufferedReader(reader);
+			String content = br.readLine();
+			while(content != null) {
+				//splits the comma-separated values into array of Strings
+				String[] rowData = content.split(",");
+				String productName = rowData[2];
+				if(productName.equals(name)) {
+					exists = true;
+					break;
+				}
+				//traverses to the next line
+				content = br.readLine();
+			}
+			br.close();
+			reader.close();
+		}
+		catch(Exception e) {
+			JOptionPane.showMessageDialog(messageFrame, "Failed to check file.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		return exists;
 	}
 }
