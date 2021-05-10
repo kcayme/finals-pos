@@ -10,7 +10,19 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+/*
+======================================================================
+ CLASS NAME  : MenuManager
+ DESCRIPTION : Responsible for the File Handling done in the MainPOS Class such as updating the menu and checkout table whenever inventory table is accessed and updating the database when a transaction is made. 
+ COPYRIGHT   : May 5, 2021
+ REVISION HISTORY
+ Date:               			By:          				Description:
+ May 5, 2021			Karl Jensen F. Cayme			Creation of Class constructor, data fields, and methods	
+ May 7, 2021			Karl Jensen F. Cayme			Addition of getStocks, getTotal and getTableIndex methods
+ May 8, 2021			Karl Jensen F. Cayme			Debugging of updateCheckout method.
 
+======================================================================
+*/
 public class MenuManager implements FileHandling {
 	private JFrame messageFrame;
 	private File file;
@@ -20,15 +32,39 @@ public class MenuManager implements FileHandling {
 		this.setFile(fileName);
 		this.setTable(menuTable);
 	}
-	
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public void setFile(String fileName) {
 		file = new File(fileName);
 	}
-	
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public void setTable(JTable table) {
 		this.table = table;
 	}
-	
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	@Override
 	public void readFile() {
 		DefaultTableModel model = (DefaultTableModel)table.getModel();
@@ -62,7 +98,15 @@ public class MenuManager implements FileHandling {
 			JOptionPane.showMessageDialog(messageFrame, "Failed to read file.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public void updateCheckout(JTable checkoutTable) {
 		DefaultTableModel model = (DefaultTableModel)checkoutTable.getModel();
 		FileReader reader;
@@ -126,7 +170,15 @@ public class MenuManager implements FileHandling {
 			JOptionPane.showMessageDialog(messageFrame, "Failed to update checkout.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	@Override
 	public void updateFile() {
 		File tempFile = new File("temp.csv");
@@ -184,7 +236,15 @@ public class MenuManager implements FileHandling {
 		}
 
 	}
-
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	@Override
 	public void createFile() {
 		if(file.exists()) {
@@ -205,11 +265,27 @@ public class MenuManager implements FileHandling {
 			}
 		}
 	}
-	
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public File getFile() {
 		return file;
 	}
-	
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public int checkStocks(String name) {
 		int inventoryStock = 0;
 		FileReader reader;
@@ -236,7 +312,15 @@ public class MenuManager implements FileHandling {
 		}
 		return inventoryStock;
 	}
-	
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public int getTableIndex(String name) {
 		int inTable = -1;
 		for (int i=0; i < table.getRowCount(); i++) {
@@ -247,7 +331,15 @@ public class MenuManager implements FileHandling {
 		
 		return inTable;
 	}
-	
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public int getTableIndex(String name, JTable referenceTable) {
 		int inTable = -1;
 		
@@ -259,6 +351,15 @@ public class MenuManager implements FileHandling {
 		
 		return inTable;
 	}
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public double getTotal(JTable table) {
 		double total = 0;
 		

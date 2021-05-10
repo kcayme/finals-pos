@@ -8,7 +8,19 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+/*
+======================================================================
+ CLASS NAME  : InventoryManager
+ DESCRIPTION : Responsible for the File Handling of the items in the JTable of InventoryGUI
+ COPYRIGHT   : May 1, 2021
+ REVISION HISTORY
+ Date:               			By:          				Description:
+ May 1, 2021			Karl Jensen F. Cayme			Creation of Class constructor, data fields, and methods	
+ May 2, 2021			Karl Jensen F. Cayme			Editing of createFile and readFile methods	
+ May 4, 2021			Karl Jensen F. Cayme			Editing of updateFile method
 
+======================================================================
+*/
 public class InventoryManager implements FileHandling{
 	private JFrame messageFrame;
 	private File file;
@@ -18,19 +30,63 @@ public class InventoryManager implements FileHandling{
 		this.setFile(fileName);
 		this.setTable(table);
 	}
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public void setFile(String fileName) {
 		file = new File(fileName);
 	}
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public void setTable(JTable table) {
 		inventoryTable = table;
 	}
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public File getFile() {
 		return file;
 	}
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public JTable getTable() {
 		return inventoryTable;
 	}
-	
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	@Override
 	public void createFile() {
 		if(file.exists()) {
@@ -51,6 +107,15 @@ public class InventoryManager implements FileHandling{
 			}
 		}
 	}
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	@Override
 	public void readFile() {
 		DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
@@ -77,6 +142,15 @@ public class InventoryManager implements FileHandling{
 			JOptionPane.showMessageDialog(messageFrame, "Failed to read file.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	@Override
 	public void updateFile() {
 		File tempFile = new File("temp.csv");
@@ -102,29 +176,21 @@ public class InventoryManager implements FileHandling{
 			e.printStackTrace();
 		}
 	}
-	public boolean exists(String name) {
+	/**
+	======================================================================
+	METHOD : method name
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
+	public boolean exists(String name, String brand) {
 		boolean exists = false;
-		FileReader reader;
-		try {
-			reader = new FileReader(file);
-			BufferedReader br = new BufferedReader(reader);
-			String content = br.readLine();
-			while(content != null) {
-				//splits the comma-separated values into array of Strings
-				String[] rowData = content.split(",");
-				String productName = rowData[2];
-				if(productName.equals(name)) {
-					exists = true;
-					break;
-				}
-				//traverses to the next line
-				content = br.readLine();
+		for(int i=0; i<this.getTable().getRowCount(); i++) {
+			if(name.equals(this.getTable().getValueAt(i, 2)) && brand.equals(this.getTable().getValueAt(i, 1))) {
+				exists = true;
 			}
-			br.close();
-			reader.close();
-		}
-		catch(Exception e) {
-			JOptionPane.showMessageDialog(messageFrame, "Failed to check file.", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return exists;
 	}

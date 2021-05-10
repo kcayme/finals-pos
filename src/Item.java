@@ -1,7 +1,17 @@
 import java.util.HashMap;
 
 import javax.swing.JTable;
-
+/*
+======================================================================
+ CLASS NAME  : Item
+ DESCRIPTION : Contains the details of the item such as name, brand, price, stocks, category, then generates a corresponding SKU for the product and adds it to the JTable 
+ COPYRIGHT   : April 29, 2021
+ REVISION HISTORY
+ Date:               			By:          				Description:
+ April 29, 2021			Amber Brinette U. Lim			Creation of Class Constructor, data fields, and methods. Testing of Item Class				
+ May 1, 2021			Karl Jensen F. Cayme			Modification of class methods and data fields and addition of setSKU method with HashMap
+======================================================================
+*/
 public class Item {
 	private String SKU;
 	private String brand;

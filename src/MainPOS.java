@@ -4,14 +4,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
 import java.awt.Toolkit;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.DecimalFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,42 +14,24 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JMenu;
-import javax.swing.SpringLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.BorderLayout;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import net.miginfocom.swing.MigLayout;
 import javax.swing.JSplitPane;
-import java.awt.FlowLayout;
 import java.awt.Font;
 
 import javax.swing.JLabel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SortOrder;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.SystemColor;
 
-import javax.swing.SwingConstants;
-import java.awt.GridLayout;
-import javax.swing.JSeparator;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.SoftBevelBorder;
-import javax.swing.UIManager;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.border.MatteBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -72,7 +47,21 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.border.EtchedBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
+/*
+======================================================================
+ CLASS NAME  : MainPOS
+ DESCRIPTION : Displays the main interface of the POS specifically the items list and checkout list and where the transaction takes place
+ COPYRIGHT   : April 27, 2021
+ REVISION HISTORY
+ Date:               			By:          				Description:
+ April 27, 2021			Karl Jensen F. Cayme			Creation of the MainPOS Class and template of JFrames for Inventory and Cash Register and a clock function with date
+ April 30, 2021			Miguel Edwin P. Salubre			Integration of Login GUI to this class.
+ May 6, 2021			Karl Jensen F. Cayme			Addition of search bar function and layouting for the checkout panel.
+ May 7, 2021			Karl Jensen F. Cayme			Adding a refresh algorithm for menu table and checkout table.
+ May 8, 2021			Karl Jensen F. Cayme			Addition of JButtons for filtering the item list by category and for transactions.
+ 														
+======================================================================
+*/
 public class MainPOS {
 
 	private JFrame frame;
@@ -84,8 +73,14 @@ public class MainPOS {
 	
 
 	/**
-	 * Launch the application.
-	 */
+	======================================================================
+	METHOD : main
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -98,7 +93,15 @@ public class MainPOS {
 			}
 		});
 	}
-	
+	/**
+	======================================================================
+	METHOD : clock
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	public void clock(){
 		
 		JPanel panel = new JPanel();
@@ -141,8 +144,14 @@ public class MainPOS {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
-	 */
+	======================================================================
+	METHOD : initialize
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1400, 900);
@@ -285,9 +294,55 @@ public class MainPOS {
 			}
 		};
 		
+		menuTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Brand", "Product", "Category", "Price", "Availability"
+				}
+		) {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+			@SuppressWarnings("rawtypes")
+			Class[] columnTypes = new Class[] {
+					String.class, String.class, String.class, Double.class, String.class
+			};
+			@SuppressWarnings({ "unchecked", "rawtypes" })
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		menuTable.getColumnModel().getColumn(0).setPreferredWidth(70);
+		menuTable.getColumnModel().getColumn(1).setPreferredWidth(220);
+		menuTable.getColumnModel().getColumn(2).setPreferredWidth(170);
+		menuTable.getColumnModel().getColumn(3).setPreferredWidth(60);
+		menuTable.getColumnModel().getColumn(4).setPreferredWidth(60);
+		menuTable.setFont(new Font("Helvetica", Font.PLAIN, 14));
+		menuTable.setRowHeight(30);
+		scrollPane.setViewportView(menuTable);
+		menuTable.setAutoCreateRowSorter(true);
+		
 		String fileName = "inventoryData.csv";
 		MenuManager manager = new MenuManager(fileName,menuTable);
+		manager.createFile();
 		
+		
+		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>((DefaultTableModel)menuTable.getModel());
+		menuTable.setRowSorter(sorter);
+		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+		sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+		sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+		sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
+		sorter.setSortKeys(sortKeys);
+			
 		//mouse listener for adding items from menu to checkout
 		menuTable.addMouseListener(new MouseAdapter() {
 			@Override
@@ -328,41 +383,6 @@ public class MainPOS {
 		        }
 			}
 		});
-		menuTable.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Brand", "Product", "Category", "Price", "Availability"
-			}
-		) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			@SuppressWarnings("rawtypes")
-			Class[] columnTypes = new Class[] {
-					String.class, String.class, String.class, Double.class, String.class
-			};
-			@SuppressWarnings({ "unchecked", "rawtypes" })
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		menuTable.getColumnModel().getColumn(0).setPreferredWidth(70);
-		menuTable.getColumnModel().getColumn(1).setPreferredWidth(220);
-		menuTable.getColumnModel().getColumn(2).setPreferredWidth(170);
-		menuTable.getColumnModel().getColumn(3).setPreferredWidth(60);
-		menuTable.getColumnModel().getColumn(4).setPreferredWidth(60);
-		menuTable.setFont(new Font("Helvetica", Font.PLAIN, 14));
-		menuTable.setRowHeight(30);
-		menuTable.setAutoCreateRowSorter(true);
-		scrollPane.setViewportView(menuTable);
 		
 		JPanel panel_4 = new JPanel();
 		GridBagConstraints gbc_panel_4 = new GridBagConstraints();
@@ -477,7 +497,7 @@ public class MainPOS {
 					.addGap(39))
 		);
 		panel_4.setLayout(gl_panel_4);
-		manager.createFile();
+		
 		
 		JMenu adminMenu = new JMenu("Administrator");
 		menuBar.add(adminMenu);
@@ -753,6 +773,15 @@ public class MainPOS {
 		    }
 		});
 	}
+	/**
+	======================================================================
+	METHOD : existsInTable
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	private int existsInTable(JTable table, String name) {
 		int exists = -1;
 		
@@ -764,6 +793,15 @@ public class MainPOS {
 		}
 		return exists;
 	}
+	/**
+	======================================================================
+	METHOD : findPrice
+	DESCRIPTION : brief description of what the method does
+	PRE-CONDITION : states conditions that must be true before method
+	is invoked
+	POST-CONDITION : tells what will be true after method executed
+	======================================================================
+	*/
 	private double findPrice(JTable table, String name) {
 		double price = 0;
 		

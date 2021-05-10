@@ -1,13 +1,7 @@
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTable;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormSpecs;
 import javax.swing.JButton;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -40,7 +34,19 @@ import java.awt.event.KeyEvent;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+/*
+======================================================================
+ CLASS NAME  : InventoryGUI
+ DESCRIPTION : Displays the full list of items and corresponding their corresponding. This is where the user can add, delete, search, sort, or update the items 
+ COPYRIGHT   : April 28, 2021
+ REVISION HISTORY
+ Date:               			By:          				Description:
+ April 28, 2021			Karl Jensen F. Cayme			Adding of JTable for item lists and JButtons for add, update, delete, and clear functions
+ April 29, 2021			Karl Jensen F. Cayme			Coding of ActionListeners for JTable and JButtons
+ May 1, 2021			Karl Jensen F. Cayme			Addition of Search function for the JTable and File Handling					
 
+======================================================================
+*/
 public class InventoryGUI extends JFrame{
 
 	/**
@@ -67,9 +73,6 @@ public class InventoryGUI extends JFrame{
 	private JButton updateBtn;
 	private JButton clearBtn;
 	private JTextField priceTF;
-	/**
-	 * Launch the application.
-	 */
 
 	/**
 	 * Create the frame.
@@ -141,6 +144,57 @@ public class InventoryGUI extends JFrame{
 		inventoryTable.getColumnModel().getColumn(4).setPreferredWidth(80);
 		inventoryTable.getColumnModel().getColumn(5).setPreferredWidth(80);
 		inventoryTable.setAutoCreateRowSorter(true);
+		inventoryTable.setRowHeight(30);
+		
+		//create FileManager object for file handling
+		InventoryManager manager = new InventoryManager("inventoryData.csv",inventoryTable);
+		manager.createFile();
+		
+		MenuManager menu = new MenuManager("inventoryData.csv",menuTable);
+		
+		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>((DefaultTableModel)inventoryTable.getModel());
+		inventoryTable.setRowSorter(sorter);
+		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+		sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+		sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+		sorter.setSortKeys(sortKeys);
+		
+		JComboBox<String> categoryCB = new JComboBox<String>();
+		categoryCB.setFont(new Font("Helvetica", Font.PLAIN, 12));
+		categoryCB.addItem("-Select Category-"	);
+		String[] categoryList = {"Men's Apparel","Women's Apparel","Appliances & Electronics" ,"Kids & Toys","School Supplies","Accessories"};
+		for(int i=0; i<categoryList.length; i++) {
+			categoryCB.addItem(categoryList[i]);
+		}
+		
+		//MouseListener to check if the user is clicking a row in the JTable
+		inventoryTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//use DefaultTableModel object to manage contents of the JTable, this is necessary
+				DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
+				int i = inventoryTable.getSelectedRow();
+				brandTF.setText(model.getValueAt(i, 1).toString());
+				nameTF.setText(model.getValueAt(i, 2).toString());
+				String originalCategory = model.getValueAt(i, 3).toString();
+				for(int j=1; j<categoryCB.getItemCount(); j++) {
+					if(originalCategory.compareTo(categoryCB.getItemAt(j).toUpperCase()) == 0) {
+						categoryCB.setSelectedIndex(j);			
+					}
+				}
+				stocksTF.setText(model.getValueAt(i, 4).toString());
+				priceTF.setText(model.getValueAt(i, 5).toString());
+			}
+		});
+		
+		logoutItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				manager.setTable(inventoryTable);
+		    	manager.updateFile();
+	        	dispose();
+			}
+		});
+		optionMenu.add(logoutItem);
 		
 		searchTF = new JTextField();
 		searchTF.addKeyListener(new KeyAdapter() {
@@ -177,51 +231,7 @@ public class InventoryGUI extends JFrame{
 		gbc_scrollPane.gridx = 1;
 		gbc_scrollPane.gridy = 3;
 		contentPane.add(scrollPane, gbc_scrollPane);
-		
-		JComboBox<String> categoryCB = new JComboBox<String>();
-		categoryCB.setFont(new Font("Helvetica", Font.PLAIN, 12));
-		categoryCB.addItem("-Select Category-"	);
-		String[] categoryList = {"Men's Apparel","Women's Apparel","Appliances & Electronics" ,"Kids & Toys","School Supplies","Accessories"};
-		for(int i=0; i<categoryList.length; i++) {
-			categoryCB.addItem(categoryList[i]);
-		}
-		//use DefaultTableModel object to manage contents of the JTable, this is necessary
-		DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
-		inventoryTable.setRowHeight(30);
 		scrollPane.setViewportView(inventoryTable);
-		
-		//create FileManager object for filehandling
-		InventoryManager manager = new InventoryManager("inventoryData.csv",inventoryTable);
-		MenuManager menu = new MenuManager("inventoryData.csv",menuTable);
-		manager.createFile();
-		sortTable(inventoryTable);
-		
-		logoutItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				manager.setTable(inventoryTable);
-		    	manager.updateFile();
-	        	dispose();
-			}
-		});
-		optionMenu.add(logoutItem);
-		
-		//MouseListener to check if the user is clicking a row in the JTable
-		inventoryTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int i = inventoryTable.getSelectedRow();
-				brandTF.setText(model.getValueAt(i, 1).toString());
-				nameTF.setText(model.getValueAt(i, 2).toString());
-				String originalCategory = model.getValueAt(i, 3).toString();
-				for(int j=1; j<categoryCB.getItemCount(); j++) {
-					if(originalCategory.compareTo(categoryCB.getItemAt(j).toUpperCase()) == 0) {
-						categoryCB.setSelectedIndex(j);			
-					}
-				}
-				stocksTF.setText(model.getValueAt(i, 4).toString());
-				priceTF.setText(model.getValueAt(i, 5).toString());
-			}
-		});
 		
 		panel_1 = new JPanel();
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
@@ -260,10 +270,12 @@ public class InventoryGUI extends JFrame{
 		
 		addBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
 				//checks if the textfields are empty and the chosen option in the combobox is not the first option
 				setAlwaysOnTop(false);
 				String productName = nameTF.getText().trim().toUpperCase();
-				if(!manager.exists(productName)) {
+				String brandName = brandTF.getText().trim().toUpperCase();
+				if(!manager.exists(productName, brandName)) {
 					if(!brandTF.getText().trim().isBlank() && !nameTF.getText().trim().isEmpty() && !stocksTF.getText().trim().isEmpty() && 
 							!priceTF.getText().trim().isEmpty() && categoryCB.getSelectedIndex() !=0) {
 						//try to parse text to integer and double or catch an error
@@ -288,12 +300,10 @@ public class InventoryGUI extends JFrame{
 										JOptionPane.INFORMATION_MESSAGE);
 							}
 						}
-						catch(Exception e1) {
-							
+						catch(Exception e1) {							
 							JOptionPane.showMessageDialog(messageFrame, "Invalid Input!", "Error", JOptionPane.ERROR_MESSAGE);
 						}
 						finally {
-							sortTable(inventoryTable);
 							brandTF.setText("");
 							nameTF.setText("");
 							stocksTF.setText("");
@@ -308,6 +318,7 @@ public class InventoryGUI extends JFrame{
 				else {
 					JOptionPane.showMessageDialog(messageFrame, "Item already exists.", "Add Error", JOptionPane.ERROR_MESSAGE);
 				}
+				model.fireTableDataChanged();
 				setAlwaysOnTop(true);
 			}
 		});
@@ -315,6 +326,7 @@ public class InventoryGUI extends JFrame{
 		deleteBtn = new JButton("Delete");
 		deleteBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
 				setAlwaysOnTop(false);
 				int i = inventoryTable.getSelectedRow();
 				if(i == -1) {
@@ -340,6 +352,7 @@ public class InventoryGUI extends JFrame{
 		updateBtn = new JButton("Update");
 		updateBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
 				setAlwaysOnTop(false);
 				//try to parse the Strings for stocks and price and catch error
 				try {
@@ -369,11 +382,11 @@ public class InventoryGUI extends JFrame{
 						JOptionPane.showMessageDialog(messageFrame, "No changes ommited.", "Update Status", 
 								JOptionPane.INFORMATION_MESSAGE);
 					}
-					sortTable(inventoryTable);
 				}
 				catch(Exception e1) {
 					JOptionPane.showMessageDialog(messageFrame, "Product detail update failed.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
+				model.fireTableDataChanged();
 				setAlwaysOnTop(true);
 			}
 		});
@@ -492,7 +505,6 @@ public class InventoryGUI extends JFrame{
 		    	DefaultTableModel menuModel = (DefaultTableModel) menuTable.getModel();
 		    	menuModel.setRowCount(0);
 		    	menu.readFile();
-		    	sortTable(menuTable);
 		    	
 		    	DecimalFormat formatter = new DecimalFormat("#,###.00");
 		    	menu.updateCheckout(checkoutTable);
@@ -501,14 +513,5 @@ public class InventoryGUI extends JFrame{
 	        	dispose();
 		    }
 		});
-	}
-	
-	public void sortTable(JTable table) {
-		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>((DefaultTableModel) table.getModel());
-		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-		sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
-		sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
-		sorter.setRowFilter(null);
-		sorter.setSortKeys(sortKeys);
 	}
 }
