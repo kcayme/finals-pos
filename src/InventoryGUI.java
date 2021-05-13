@@ -47,7 +47,7 @@ import javax.swing.JMenuItem;
  April 28, 2021			Karl Jensen F. Cayme			Adding of JTable for item lists and JButtons for add, update, delete, and clear functions
  April 29, 2021			Karl Jensen F. Cayme			Coding of ActionListeners for JTable and JButtons
  May 1, 2021			Karl Jensen F. Cayme			Addition of Search function for the JTable and File Handling					
-
+ May 9, 2021			Karl Jensen F. Cayme			Improvement of GUI
 ======================================================================
 */
 public class InventoryGUI extends JFrame{

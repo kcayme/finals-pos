@@ -19,7 +19,9 @@ import java.text.DecimalFormat;
  Date:               			By:          				Description:
  April 30, 2021			Miguel Edwin P. Salubre			Creation of the class. Adding JLabels, JSeparator and Background for GUI.
  May 1, 2021			Miguel Edwin P. Salubre			Updated the Logic to display the Cash On Hand from FileHandling.
- May 3, 2021			Karl Jensen F. Cayme			Changing the Data Field Format on Cash On Hand.				
+ May 3, 2021			Karl Jensen F. Cayme			Changing the Data Field Format on Cash On Hand.
+ May 11, 2021			Karl Jensen F. Cayme			Changing the Data Field Format on Cash On Hand.
+ May 12, 2021			Vince Andrei B. Retutal			Edit of the GUI					
 ======================================================================
 */
 public class CashRegGUI extends JFrame {

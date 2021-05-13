@@ -62,7 +62,8 @@ import java.awt.event.MouseEvent;
  May 6, 2021			Karl Jensen F. Cayme			Addition of search bar function and layouting for the checkout panel.
  May 7, 2021			Karl Jensen F. Cayme			Adding a refresh algorithm for menu table and checkout table.
  May 8, 2021			Karl Jensen F. Cayme			Addition of JButtons for filtering the item list by category and for transactions.
- 														
+ May 12, 2021			Vince Andrei B. Retutal			Debugging of logical errors in purchasing item
+ May 13, 2021			Vince Andrei B. Retutal			Edit of algorithm in getting the total amount in the checkout														
 ======================================================================
 */
 public class MainPOS {

@@ -20,7 +20,6 @@ import javax.swing.table.DefaultTableModel;
  May 5, 2021			Karl Jensen F. Cayme			Creation of Class constructor, data fields, and methods	
  May 7, 2021			Karl Jensen F. Cayme			Addition of getStocks, getTotal and getTableIndex methods
  May 8, 2021			Karl Jensen F. Cayme			Debugging of updateCheckout method.
-
 ======================================================================
 */
 public class MenuManager implements FileHandling {
