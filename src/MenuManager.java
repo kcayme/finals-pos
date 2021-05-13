@@ -34,11 +34,8 @@ public class MenuManager implements FileHandling {
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : setFile
+	DESCRIPTION : sets the file to be used in this class
 	======================================================================
 	*/
 	public void setFile(String fileName) {
@@ -46,11 +43,8 @@ public class MenuManager implements FileHandling {
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : setTable
+	DESCRIPTION : sets the JTable to be used for reading and updating data
 	======================================================================
 	*/
 	public void setTable(JTable table) {
@@ -58,11 +52,8 @@ public class MenuManager implements FileHandling {
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : readFile
+	DESCRIPTION : reads a csv file and places the contents into the JTable
 	======================================================================
 	*/
 	@Override
@@ -100,11 +91,8 @@ public class MenuManager implements FileHandling {
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : updateCheckout
+	DESCRIPTION : updates the item details in the checkout JTable based on the updated item list
 	======================================================================
 	*/
 	public void updateCheckout(JTable checkoutTable) {
@@ -172,11 +160,8 @@ public class MenuManager implements FileHandling {
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : updateFile
+	DESCRIPTION : updates the csv with the changes in item stocks
 	======================================================================
 	*/
 	@Override
@@ -238,11 +223,8 @@ public class MenuManager implements FileHandling {
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : createFile
+	DESCRIPTION : creates a file based on the given file name if does not exist yet, otherwise read the existing file
 	======================================================================
 	*/
 	@Override
@@ -267,11 +249,8 @@ public class MenuManager implements FileHandling {
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : getFile
+	DESCRIPTION : returns the file used in this class
 	======================================================================
 	*/
 	public File getFile() {
@@ -279,11 +258,8 @@ public class MenuManager implements FileHandling {
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : checkStocks
+	DESCRIPTION : returns the stocks of the passed product name
 	======================================================================
 	*/
 	public int checkStocks(String name) {
@@ -314,11 +290,8 @@ public class MenuManager implements FileHandling {
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : getTableIndex
+	DESCRIPTION : returns the row index in JTable based on the passed product name
 	======================================================================
 	*/
 	public int getTableIndex(String name) {
@@ -333,11 +306,8 @@ public class MenuManager implements FileHandling {
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : getTableIndex
+	DESCRIPTION : returns the row index of the passed product name from the passed JTable 
 	======================================================================
 	*/
 	public int getTableIndex(String name, JTable referenceTable) {
@@ -353,11 +323,8 @@ public class MenuManager implements FileHandling {
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : getTotal
+	DESCRIPTION : calculates the total price of the passed JTable
 	======================================================================
 	*/
 	public double getTotal(JTable table) {

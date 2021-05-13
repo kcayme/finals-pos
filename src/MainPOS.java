@@ -3,6 +3,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -29,8 +30,6 @@ import javax.swing.SortOrder;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.SystemColor;
-
 import javax.swing.border.BevelBorder;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -38,12 +37,16 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ListSelectionModel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
+
 import javax.swing.border.EtchedBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -75,10 +78,7 @@ public class MainPOS {
 	/**
 	======================================================================
 	METHOD : main
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	DESCRIPTION : runs the main POS program
 	======================================================================
 	*/
 	public static void main(String[] args) {
@@ -96,15 +96,14 @@ public class MainPOS {
 	/**
 	======================================================================
 	METHOD : clock
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	DESCRIPTION : runs an active clock with the system's current date
 	======================================================================
 	*/
 	public void clock(){
 		
 		JPanel panel = new JPanel();
+		panel.setBackground(new Color(47, 79, 79));
+		panel.setBorder(null);
 		panel.setLayout(null);
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.gridwidth = 3;
@@ -113,8 +112,9 @@ public class MainPOS {
 		gbc_panel.gridy = 2;
 		frame.getContentPane().add(panel, gbc_panel);
 		JLabel lblNewLabel = new JLabel("    Date");
-		lblNewLabel.setFont(new Font("Helvetica", Font.PLAIN, 12));
-		lblNewLabel.setBounds(10, 0, 234, 32);
+		lblNewLabel.setFont(new Font("Helvetica", Font.PLAIN, 14));
+		lblNewLabel.setForeground(Color.white);
+		lblNewLabel.setBounds(10, 0, 234, 37);
 		panel.add(lblNewLabel);
 		
 		Thread clock = new Thread(){
@@ -146,16 +146,17 @@ public class MainPOS {
 	/**
 	======================================================================
 	METHOD : initialize
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	DESCRIPTION : sets up the components of the GUI for this class including its Action Listeners
 	======================================================================
 	*/
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 1400, 900);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setTitle("Dry Goods POS");
+		Image mainImg = new ImageIcon(this.getClass().getResource("/pos.png")).getImage();
+		Image mainScaled = mainImg.getScaledInstance(500, 500, Image.SCALE_SMOOTH);
+		frame.setIconImage(mainScaled);
 		
 		//this object is used to display JFrames at the center of the screen
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -163,12 +164,13 @@ public class MainPOS {
 		DecimalFormat formatter = new DecimalFormat("#,###.00");
 		
 		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBackground(Color.WHITE);
 		frame.setJMenuBar(menuBar);
 		
 		frame.setLocation(dim.width/2-frame.getSize().width/2, dim.height/2-frame.getSize().height/2);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{153, 317, 0, 0};
-		gridBagLayout.rowHeights = new int[]{61, 689, 37, 0};
+		gridBagLayout.rowHeights = new int[]{61, 721, 37, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
 		frame.getContentPane().setLayout(gridBagLayout);
@@ -187,23 +189,23 @@ public class MainPOS {
 		frame.getContentPane().add(splitPane, gbc_splitPane);
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(SystemColor.scrollbar);
+		panel.setBackground(new Color(245, 245, 240));
 		panel.setForeground(Color.WHITE);
 		splitPane.setLeftComponent(panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{80, 633, 74};
+		gbl_panel.columnWidths = new int[]{65, 779, 60};
 		gbl_panel.rowHeights = new int[]{156, 433, 215, -62};
-		gbl_panel.columnWeights = new double[]{1.0, 1.0, 1.0};
+		gbl_panel.columnWeights = new double[]{0.0, 1.0, 0.0};
 		gbl_panel.rowWeights = new double[]{0.0, 1.0, 1.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		panel_2.setBackground(Color.LIGHT_GRAY);
+		panel_2.setBackground(new Color(47, 79, 79));
 		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
+		gbc_panel_2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_panel_2.gridwidth = 3;
 		gbc_panel_2.insets = new Insets(0, 0, 5, 0);
-		gbc_panel_2.fill = GridBagConstraints.BOTH;
 		gbc_panel_2.gridx = 0;
 		gbc_panel_2.gridy = 0;
 		panel.add(panel_2, gbc_panel_2);
@@ -221,10 +223,17 @@ public class MainPOS {
 		searchTF.setFont(new Font("Helvetica", Font.PLAIN, 12));
 		searchTF.setColumns(10);
 		
-		JLabel searchlbl = new JLabel("Search");
-		searchlbl.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		JLabel searchlbl = new JLabel("Search:");
+		searchlbl.setForeground(new Color(255, 255, 255));
+		searchlbl.setFont(new Font("Helvetica", Font.PLAIN, 14));
 		
-		JButton homeButton = new JButton("*HOME BUTTON*");
+		Image imgHome = new ImageIcon(this.getClass().getResource("/home.png")).getImage();
+		Image homeScaled = imgHome.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+		
+		JButton homeButton = new JButton("", new ImageIcon(homeScaled));
+		homeButton.setToolTipText("Click to view full list");
+		homeButton.setBackground(new Color(47, 79, 79));
+		homeButton.setBorderPainted(false);
 		homeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)menuTable.getModel();
@@ -233,36 +242,46 @@ public class MainPOS {
 				sorter.setRowFilter(RowFilter.regexFilter(""));
 			}
 		});
+		
+		JLabel lblHeader = new JLabel("Products");
+		lblHeader.setForeground(new Color(255, 255, 255));
+		lblHeader.setFont(new Font("Helvetica", Font.BOLD, 40));
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
 		gl_panel_2.setHorizontalGroup(
+			gl_panel_2.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_2.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(homeButton, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+					.addGap(42)
+					.addComponent(lblHeader, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 107, Short.MAX_VALUE)
+					.addComponent(searchlbl, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(searchTF, GroupLayout.PREFERRED_SIZE, 353, GroupLayout.PREFERRED_SIZE)
+					.addGap(33))
+		);
+		gl_panel_2.setVerticalGroup(
 			gl_panel_2.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_2.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(homeButton)
-					.addPreferredGap(ComponentPlacement.RELATED, 277, Short.MAX_VALUE)
-					.addComponent(searchlbl, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
-					.addGap(8)
-					.addComponent(searchTF, GroupLayout.PREFERRED_SIZE, 353, GroupLayout.PREFERRED_SIZE)
-					.addGap(110))
-		);
-		gl_panel_2.setVerticalGroup(
-			gl_panel_2.createParallelGroup(Alignment.TRAILING)
+					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_2.createSequentialGroup()
+							.addComponent(lblHeader, GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+							.addContainerGap())
+						.addGroup(gl_panel_2.createSequentialGroup()
+							.addComponent(homeButton, GroupLayout.PREFERRED_SIZE, 72, Short.MAX_VALUE)
+							.addGap(27))))
 				.addGroup(gl_panel_2.createSequentialGroup()
-					.addGap(21)
-					.addComponent(homeButton, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
-					.addGap(19))
-				.addGroup(gl_panel_2.createSequentialGroup()
-					.addContainerGap(55, Short.MAX_VALUE)
-					.addComponent(searchlbl)
-					.addGap(46))
-				.addGroup(Alignment.LEADING, gl_panel_2.createSequentialGroup()
-					.addGap(53)
-					.addComponent(searchTF)
-					.addGap(44))
+					.addGap(36)
+					.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
+						.addComponent(searchTF, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+						.addComponent(searchlbl))
+					.addContainerGap(44, Short.MAX_VALUE))
 		);
 		panel_2.setLayout(gl_panel_2);
 		
 		JScrollPane scrollPane = new JScrollPane(null, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setBackground(new Color(255,255,255));
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
@@ -329,6 +348,9 @@ public class MainPOS {
 		menuTable.setRowHeight(30);
 		scrollPane.setViewportView(menuTable);
 		menuTable.setAutoCreateRowSorter(true);
+		JTableHeader header = menuTable.getTableHeader();
+		header.setBackground(new Color(255, 255, 255));
+		header.setFont(new Font("Helvetica", Font.PLAIN, 16));
 		
 		String fileName = "inventoryData.csv";
 		MenuManager manager = new MenuManager(fileName,menuTable);
@@ -365,7 +387,7 @@ public class MainPOS {
 				        		model.setValueAt(subTotalUpdate, index, 3);
 				        	}
 				        	else {
-				        		JOptionPane.showMessageDialog(null, "Desired quantity exceeds current stocks.", "Insufficient Stocks", JOptionPane.ERROR_MESSAGE);
+				        		JOptionPane.showMessageDialog(messageFrame, "Desired quantity exceeds current stocks.", "Insufficient Stocks", JOptionPane.ERROR_MESSAGE);
 				        	}
 			        	}
 			        	else {
@@ -385,6 +407,7 @@ public class MainPOS {
 		});
 		
 		JPanel panel_4 = new JPanel();
+		panel_4.setBackground(new Color(245, 245, 240));
 		GridBagConstraints gbc_panel_4 = new GridBagConstraints();
 		gbc_panel_4.gridwidth = 3;
 		gbc_panel_4.insets = new Insets(0, 0, 0, 5);
@@ -394,6 +417,8 @@ public class MainPOS {
 		panel.add(panel_4, gbc_panel_4);
 		
 		JButton menButton = new JButton("Men's Apparel");
+		menButton.setToolTipText("Click to filter by this category");
+		menButton.setBackground(new Color(138, 209, 255));
 		menButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)menuTable.getModel();
@@ -405,6 +430,8 @@ public class MainPOS {
 		menButton.setFont(new Font("Helvetica", Font.PLAIN, 20));
 		
 		JButton womenButton = new JButton("Women's Apparel");
+		womenButton.setToolTipText("Click to filter by this category");
+		womenButton.setBackground(new Color(255, 138, 216));
 		womenButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)menuTable.getModel();
@@ -415,7 +442,9 @@ public class MainPOS {
 		});
 		womenButton.setFont(new Font("Helvetica", Font.PLAIN, 20));
 		
-		JButton appButton = new JButton("Appliances & Electronics");
+		JButton appButton = new JButton("<html><center>Appliances<br>&<br>Electronics</center></html>");
+		appButton.setToolTipText("Click to filter by this category");
+		appButton.setBackground(new Color(255, 241, 102));
 		appButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)menuTable.getModel();
@@ -427,6 +456,8 @@ public class MainPOS {
 		appButton.setFont(new Font("Helvetica", Font.PLAIN, 20));
 		
 		JButton kidsButton = new JButton("Kids & Toys");
+		kidsButton.setToolTipText("Click to filter by this category");
+		kidsButton.setBackground(new Color(255, 208, 115));
 		kidsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)menuTable.getModel();
@@ -438,6 +469,8 @@ public class MainPOS {
 		kidsButton.setFont(new Font("Helvetica", Font.PLAIN, 20));
 		
 		JButton schoolButton = new JButton("School Supplies");
+		schoolButton.setToolTipText("Click to filter by this category");
+		schoolButton.setBackground(new Color(206, 138, 255));
 		schoolButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)menuTable.getModel();
@@ -449,6 +482,8 @@ public class MainPOS {
 		schoolButton.setFont(new Font("Helvetica", Font.PLAIN, 20));
 		
 		JButton accButton = new JButton("Accessories");
+		accButton.setToolTipText("Click to filter by this category");
+		accButton.setBackground(new Color(255, 155, 105));
 		accButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)menuTable.getModel();
@@ -464,15 +499,15 @@ public class MainPOS {
 				.addGroup(gl_panel_4.createSequentialGroup()
 					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_4.createSequentialGroup()
-							.addGap(57)
-							.addComponent(menButton, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
-						.addGroup(gl_panel_4.createSequentialGroup()
 							.addGap(55)
-							.addComponent(kidsButton, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)))
+							.addComponent(kidsButton, GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))
+						.addGroup(gl_panel_4.createSequentialGroup()
+							.addGap(57)
+							.addComponent(menButton, GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)))
 					.addGap(26)
 					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
 						.addComponent(schoolButton, GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
-						.addComponent(womenButton, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+						.addComponent(womenButton, GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))
 					.addGap(18)
 					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
 						.addComponent(appButton, GroupLayout.PREFERRED_SIZE, 246, Short.MAX_VALUE)
@@ -484,15 +519,13 @@ public class MainPOS {
 				.addGroup(gl_panel_4.createSequentialGroup()
 					.addGap(20)
 					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-						.addComponent(womenButton, GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
-						.addGroup(gl_panel_4.createSequentialGroup()
-							.addComponent(menButton, GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-							.addGap(8))
-						.addComponent(appButton, GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))
+						.addComponent(womenButton, GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+						.addComponent(appButton, GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+						.addComponent(menButton, GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
 						.addComponent(accButton, GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
-						.addComponent(schoolButton, GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+						.addComponent(schoolButton, GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
 						.addComponent(kidsButton, GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE))
 					.addGap(39))
 		);
@@ -509,6 +542,7 @@ public class MainPOS {
 				login.setLocation(dim.width/2-login.getSize().width/2, dim.height/2-login.getSize().height/2);
 			}
 		});
+		
 		JMenuItem cashReg = new JMenuItem("Cash Register");
 		cashReg.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -521,6 +555,8 @@ public class MainPOS {
 		adminMenu.add(cashReg);
 		
 		JPanel checkoutPanel = new JPanel();
+		checkoutPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		checkoutPanel.setBackground(new Color(255, 255, 255));
 		splitPane.setRightComponent(checkoutPanel);
 		GridBagLayout gbl_checkoutPanel = new GridBagLayout();
 		gbl_checkoutPanel.columnWidths = new int[]{32, 199, 191, 27, 0};
@@ -530,6 +566,7 @@ public class MainPOS {
 		checkoutPanel.setLayout(gbl_checkoutPanel);
 		
 		JPanel panel_3 = new JPanel();
+		panel_3.setBackground(new Color(255, 255, 255));
 		GridBagConstraints gbc_panel_3 = new GridBagConstraints();
 		gbc_panel_3.gridheight = 2;
 		gbc_panel_3.gridwidth = 4;
@@ -538,14 +575,27 @@ public class MainPOS {
 		gbc_panel_3.gridy = 0;
 		checkoutPanel.add(panel_3, gbc_panel_3);
 		GridBagLayout gbl_panel_3 = new GridBagLayout();
-		gbl_panel_3.columnWidths = new int[]{76, 0, 158, 102, 204, -159, 0};
+		gbl_panel_3.columnWidths = new int[]{58, 106, 158, 102, 204, -159, 0};
 		gbl_panel_3.rowHeights = new int[]{14, 0, 0, 0};
 		gbl_panel_3.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 1.0, Double.MIN_VALUE};
 		gbl_panel_3.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel_3.setLayout(gbl_panel_3);
 		
+		JLabel checkoutIcon = new JLabel("");
+		GridBagConstraints gbc_checkoutIcon = new GridBagConstraints();
+		gbc_checkoutIcon.fill = GridBagConstraints.HORIZONTAL;
+		gbc_checkoutIcon.insets = new Insets(0, 0, 5, 5);
+		gbc_checkoutIcon.gridx = 1;
+		gbc_checkoutIcon.gridy = 1;
+		panel_3.add(checkoutIcon, gbc_checkoutIcon);
+		
+		Image img = new ImageIcon(this.getClass().getResource("/checkout.png")).getImage();
+		Image imgScaled = img.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+		checkoutIcon.setIcon(new ImageIcon(imgScaled));
+		
 		JLabel checkoutHeader = new JLabel("CHECKOUT");
 		checkoutHeader.setFont(new Font("Helvetica", Font.BOLD, 44));
+		checkoutHeader.setBackground(new Color(255,255,255));
 		GridBagConstraints gbc_checkoutHeader = new GridBagConstraints();
 		gbc_checkoutHeader.insets = new Insets(0, 0, 5, 5);
 		gbc_checkoutHeader.gridwidth = 2;
@@ -563,6 +613,10 @@ public class MainPOS {
 		checkoutPanel.add(scrollPane_1, gbc_scrollPane_1);
 		
 		checkoutTable = new JTable();
+		checkoutTable.setToolTipText("Double click item row to edit quantity");
+		JTableHeader checkoutHead = checkoutTable.getTableHeader();
+		checkoutHead.setBackground(new Color(255,255,255));
+		checkoutHead.setFont(new Font("Helvetica", Font.PLAIN, 16));
 		checkoutTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -630,9 +684,12 @@ public class MainPOS {
 		checkoutTable.getColumnModel().getColumn(2).setResizable(false);
 		checkoutTable.setFont(new Font("Helvetica", Font.PLAIN, 16));
 		checkoutTable.setRowHeight(40);
+		checkoutTable.setRowSelectionAllowed(true);
+		checkoutTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane_1.setViewportView(checkoutTable);
 		
 		JPanel checkoutBottomPanel = new JPanel();
+		checkoutBottomPanel.setBackground(new Color(255, 255, 255));
 		checkoutBottomPanel.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		GridBagConstraints gbc_checkoutBottomPanel = new GridBagConstraints();
 		gbc_checkoutBottomPanel.gridwidth = 4;
@@ -648,26 +705,26 @@ public class MainPOS {
 		checkoutBottomPanel.setLayout(gbl_checkoutBottomPanel);
 		
 		JLabel lblTotal = new JLabel("Total: ");
-		lblTotal.setFont(new Font("Helvetica", Font.BOLD, 34));
+		lblTotal.setFont(new Font("Helvetica", Font.BOLD, 36));
 		GridBagConstraints gbc_lblTotal = new GridBagConstraints();
 		gbc_lblTotal.gridwidth = 3;
-		gbc_lblTotal.anchor = GridBagConstraints.SOUTH;
 		gbc_lblTotal.insets = new Insets(0, 0, 5, 5);
 		gbc_lblTotal.gridx = 1;
 		gbc_lblTotal.gridy = 0;
 		checkoutBottomPanel.add(lblTotal, gbc_lblTotal);
 		
-		lblTotalValue = new JLabel("P0.00");
-		lblTotalValue.setFont(new Font("Helvetica", Font.BOLD, 36));
+		lblTotalValue = new JLabel("Php 0.00");
+		lblTotalValue.setFont(new Font("Helvetica", Font.BOLD, 38));
 		GridBagConstraints gbc_lblTotalValue = new GridBagConstraints();
 		gbc_lblTotalValue.gridwidth = 2;
-		gbc_lblTotalValue.anchor = GridBagConstraints.SOUTHEAST;
+		gbc_lblTotalValue.anchor = GridBagConstraints.EAST;
 		gbc_lblTotalValue.insets = new Insets(0, 0, 5, 5);
 		gbc_lblTotalValue.gridx = 4;
 		gbc_lblTotalValue.gridy = 0;
 		checkoutBottomPanel.add(lblTotalValue, gbc_lblTotalValue);
 		
 		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(255, 255, 255));
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
 		gbc_panel_1.gridheight = 2;
 		gbc_panel_1.insets = new Insets(0, 0, 5, 0);
@@ -680,29 +737,40 @@ public class MainPOS {
 		
 		JButton purchaseBtn = new JButton("PURCHASE");
 		purchaseBtn.setFont(new Font("Helvetica", Font.PLAIN, 20));
+		purchaseBtn.setBackground(new Color(38, 255, 85));
 		purchaseBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				double total = manager.getTotal(checkoutTable);
-				String input = JOptionPane.showInputDialog(messageFrame, "Input Payment: ", "Checkout", 
-						JOptionPane.INFORMATION_MESSAGE);
-				if(input!=null) {
-		        	try {
-		        		double payment = Double.parseDouble(input.trim());
-		        		CashRegister cr = new CashRegister(payment,total,checkoutTable,fileName);
-		        		DefaultTableModel checkoutModel = (DefaultTableModel)checkoutTable.getModel();
-		        		DefaultTableModel menuModel = (DefaultTableModel)menuTable.getModel();
-		        		checkoutModel.setRowCount(0);
-		        		menuModel.setRowCount(0);
-		        		manager.readFile();
+				if(checkoutTable.getRowCount() != 0) {
+					double total = manager.getTotal(checkoutTable);
+					String input = JOptionPane.showInputDialog(messageFrame, "Input Payment: ", "Checkout", 
+							JOptionPane.INFORMATION_MESSAGE);
+					if(input!=null) {
+			        	try {
+			        		double payment = Double.parseDouble(input.trim());
+			        		CashRegister cr = new CashRegister(payment,total,checkoutTable,fileName);
+			        		
+			        		if(cr.getTransactionMade()) {
+			        			DefaultTableModel checkoutModel = (DefaultTableModel)checkoutTable.getModel();
+				        		DefaultTableModel menuModel = (DefaultTableModel)menuTable.getModel();
+				        		checkoutModel.setRowCount(0);
+				        		menuModel.setRowCount(0);
+				        		manager.readFile();
+			        		}
+			        	}
+				        catch(Exception e1){
+				        	JOptionPane.showMessageDialog(messageFrame, "Invalid input.", "Error", JOptionPane.ERROR_MESSAGE);
+				        }
 		        	}
-			        catch(Exception e1){
-			        	JOptionPane.showMessageDialog(null, "Invalid input.", "Error", JOptionPane.ERROR_MESSAGE);
-			        }
-	        	}
+				}
+				else {
+					JOptionPane.showMessageDialog(messageFrame, "Cannot proceed to checkout.", "Empty Checkout", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
 		JButton cancelBtn = new JButton("CANCEL");
+		cancelBtn.setFont(new Font("Helvetica", Font.PLAIN, 20));
+		cancelBtn.setBackground(new Color(255, 154, 53));
 		cancelBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)checkoutTable.getModel();
@@ -716,18 +784,26 @@ public class MainPOS {
 				}
 			}
 		});
-		cancelBtn.setFont(new Font("Helvetica", Font.PLAIN, 20));
+		
 		
 		JButton deleteBtn = new JButton("DELETE");
 		deleteBtn.setFont(new Font("Helvetica", Font.PLAIN, 20));
+		deleteBtn.setBackground(new Color(255, 59, 59));
 		deleteBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)checkoutTable.getModel();	
 					if(model.getRowCount() != 0) {
-						int i = checkoutTable.getSelectedRow();
-						model.removeRow(i);
-						double total = manager.getTotal(checkoutTable);
-			        	lblTotalValue.setText("Php " + formatter.format(total));
+						int[] i = checkoutTable.getSelectedRows();
+						if(i.length != 0) {
+							for(int j=i.length -1; j >= 0; j--) {
+								model.removeRow(i[j]);
+							}
+							double total = manager.getTotal(checkoutTable);
+				        	lblTotalValue.setText("Php " + formatter.format(total));
+						}
+						else {
+							JOptionPane.showMessageDialog(messageFrame, "Select item to remove.");
+						}
 					}
 					else {
 						JOptionPane.showMessageDialog(messageFrame, "Checkout already empty.");
@@ -739,23 +815,23 @@ public class MainPOS {
 			gl_panel_1.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_1.createSequentialGroup()
 					.addGap(35)
-					.addComponent(purchaseBtn, GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+					.addComponent(purchaseBtn, GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
 					.addGap(32)
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addComponent(deleteBtn, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-						.addComponent(cancelBtn, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
+						.addComponent(deleteBtn, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+						.addComponent(cancelBtn, GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE))
 					.addGap(40))
 		);
 		gl_panel_1.setVerticalGroup(
 			gl_panel_1.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_1.createSequentialGroup()
-					.addGap(26)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+					.addContainerGap()
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_panel_1.createSequentialGroup()
-							.addComponent(deleteBtn, GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
+							.addComponent(deleteBtn, GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(cancelBtn, GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE))
-						.addComponent(purchaseBtn, GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE))
+							.addComponent(cancelBtn, GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE))
+						.addComponent(purchaseBtn, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))
 					.addContainerGap())
 		);
 		panel_1.setLayout(gl_panel_1);
@@ -776,10 +852,7 @@ public class MainPOS {
 	/**
 	======================================================================
 	METHOD : existsInTable
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	DESCRIPTION : returns the index of the product name in the checkout table, else -1 is returned
 	======================================================================
 	*/
 	private int existsInTable(JTable table, String name) {
@@ -796,10 +869,7 @@ public class MainPOS {
 	/**
 	======================================================================
 	METHOD : findPrice
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	DESCRIPTION : returns the corresponding price of the product by checking the list in the menu table
 	======================================================================
 	*/
 	private double findPrice(JTable table, String name) {

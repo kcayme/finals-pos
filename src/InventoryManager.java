@@ -32,11 +32,8 @@ public class InventoryManager implements FileHandling{
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : setFile
+	DESCRIPTION : sets the File to be used for file handling
 	======================================================================
 	*/
 	public void setFile(String fileName) {
@@ -44,11 +41,8 @@ public class InventoryManager implements FileHandling{
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : setTable
+	DESCRIPTION : sets the table which will be used for updating item list and reading the file
 	======================================================================
 	*/
 	public void setTable(JTable table) {
@@ -56,11 +50,8 @@ public class InventoryManager implements FileHandling{
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : getFile() 
+	DESCRIPTION : returns the File used in this class
 	======================================================================
 	*/
 	public File getFile() {
@@ -68,11 +59,8 @@ public class InventoryManager implements FileHandling{
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : getTable() 
+	DESCRIPTION : returns the JTable used in this class
 	======================================================================
 	*/
 	public JTable getTable() {
@@ -80,11 +68,10 @@ public class InventoryManager implements FileHandling{
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : createFile
+	DESCRIPTION : creates a file to store the item list or calls readFile method to read the existing data
+	PRE-CONDITION : file path must be valid
+	POST-CONDITION : the file is either created or read
 	======================================================================
 	*/
 	@Override
@@ -109,11 +96,8 @@ public class InventoryManager implements FileHandling{
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : readFile
+	DESCRIPTION : reads the data from a csv file and puts it in the JTable
 	======================================================================
 	*/
 	@Override
@@ -144,11 +128,8 @@ public class InventoryManager implements FileHandling{
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : updateFile
+	DESCRIPTION : replaces the old file with a new that contains the updated list
 	======================================================================
 	*/
 	@Override
@@ -178,11 +159,8 @@ public class InventoryManager implements FileHandling{
 	}
 	/**
 	======================================================================
-	METHOD : method name
-	DESCRIPTION : brief description of what the method does
-	PRE-CONDITION : states conditions that must be true before method
-	is invoked
-	POST-CONDITION : tells what will be true after method executed
+	METHOD : exists
+	DESCRIPTION : checks the JTable in this class if the passed brand and name already exists in it
 	======================================================================
 	*/
 	public boolean exists(String name, String brand) {

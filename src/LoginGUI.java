@@ -16,7 +16,20 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-
+/*
+======================================================================
+ CLASS NAME  : LoginGUI
+ DESCRIPTION : Deals with Logic on Security which enter password. This is where the user has to login to access other functions of system.
+ COPYRIGHT   : April 29, 2021
+ REVISION HISTORY
+ Date:               			By:          				Description:
+ April 29, 2021			Amber Brinette U. Lim			Creation of the class and Logic. 
+ May 1, 2021			Miguel Edwin P. Salubre			Updated the Logic of method login to Connect between Main Menu, this class and 
+ 									Inventory/Cash Register GUI.
+ May 3, 2021			Karl Jensen F. Cayme			Updated the Logic on login and added methods setOptionShow
+ May 4, 2021			Karl Jensen F. Cayme			Added method doOption.				
+======================================================================
+*/
 public class LoginGUI extends JFrame{
 
 	/**
@@ -54,7 +67,14 @@ public class LoginGUI extends JFrame{
 		login(menuTable,checkoutTable, lblTotalValue);
 		getRootPane().setDefaultButton(button);
 	}
-	
+	/**
+	======================================================================
+	METHOD : login
+	DESCRIPTION : set the Contents of the Panel. Deals with the logic of entering Username and Password
+	PRE-CONDITION : method has to be called or invoked from the class that call this method
+	POST-CONDITION : prompts user to enter username and password, notifies if incorrect
+	======================================================================
+	*/
 	public void login(JTable menuTable, JTable checkoutTable, JLabel lblTotalValue) {
 		
 		contentPane.setLayout(null);
@@ -115,12 +135,28 @@ public class LoginGUI extends JFrame{
 		});
 		
 	}
-
+	/**
+	======================================================================
+	METHOD : seOptionShow
+	DESCRIPTION : Set the Option what to part to proceed when password is correct .
+	PRE-CONDITION : Password and username entered has to be correct ,number is specified what button has clicked
+			in main menu
+	POST-CONDITION : A Value is set to display next GUI when login is successful
+	======================================================================
+	*/
 	public void setOptionShow(int number)
 	{
 		LoginGUI.number = number;
 	}
-	
+	/**
+	======================================================================
+	METHOD : doOptionShow
+	DESCRIPTION : Initialized the next GUI to be displayed and disposes the LoginGUI
+	PRE-CONDITION : Password and username entered has to be correct,number is specified what button has clicked
+			in main menu, the JTable from the Invent
+	POST-CONDITION : Initialized next GUI when login is successful and disposes LoginGUI
+	======================================================================
+	*/
 	private void doOptionShow(int number, JTable menuTable, JTable checkoutTable, JLabel lblTotalValue)
 	{
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();

@@ -4,6 +4,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
@@ -12,14 +13,17 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import java.awt.Color;
 import java.awt.Font;
 import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.Icon;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
@@ -73,16 +77,29 @@ public class InventoryGUI extends JFrame{
 	private JButton updateBtn;
 	private JButton clearBtn;
 	private JTextField priceTF;
+	private JLabel lblIcon;
 
 	/**
 	 * Create the frame.
 	 */
+	
+	public static void main(String[] args) {
+		InventoryGUI inventory = new InventoryGUI(new JTable(), new JTable(), new JLabel());
+		inventory.setVisible(true);
+	}
 	public InventoryGUI(JTable menuTable, JTable checkoutTable, JLabel lblTotalValue) {
+		
+		Image inventoryImg = new ImageIcon(this.getClass().getResource("/inventory.png")).getImage();
+		Image inventoryScaled = inventoryImg.getScaledInstance(500, 500, Image.SCALE_SMOOTH);
+		setIconImage(inventoryScaled);
+		setTitle("Inventory");
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 900, 600);
 		
 		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBackground(new Color(255, 255, 255));
+		menuBar.setFont(new Font("Helvetica", Font.PLAIN, 12));
 		setJMenuBar(menuBar);
 		
 		JMenu optionMenu = new JMenu("Option");
@@ -91,29 +108,45 @@ public class InventoryGUI extends JFrame{
 		JMenuItem logoutItem = new JMenuItem("Log Out");
 		
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(47, 79, 79));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{20, 84, 55, 251, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_contentPane.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 96, 132, 0, 0};
-		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.columnWidths = new int[]{20, 0, 84, 144, 251, 0, 0, 21, 32, 0, 0, 0, 0, 0, 40, 18, 18, 0};
+		gbl_contentPane.rowHeights = new int[]{39, 30, 25, 0, 0, 0, 0, 0, 0, 0, 96, 0, 99, 30, 0};
+		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
-		lblSearch = new JLabel("Search Product");
+		lblIcon = new JLabel("");
+		Image iconScaled = inventoryImg.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+		lblIcon.setIcon(new ImageIcon(iconScaled));
+		GridBagConstraints gbc_lblIcon = new GridBagConstraints();
+		gbc_lblIcon.fill = GridBagConstraints.HORIZONTAL;
+		gbc_lblIcon.gridheight = 3;
+		gbc_lblIcon.insets = new Insets(0, 0, 5, 5);
+		gbc_lblIcon.gridx = 2;
+		gbc_lblIcon.gridy = 0;
+		contentPane.add(lblIcon, gbc_lblIcon);
+		
+		lblSearch = new JLabel("Search:");
+		lblSearch.setForeground(new Color(255, 255, 255));
 		lblSearch.setFont(new Font("Helvetica", Font.PLAIN, 12));
 		GridBagConstraints gbc_lblSearch = new GridBagConstraints();
+		gbc_lblSearch.anchor = GridBagConstraints.EAST;
+		gbc_lblSearch.fill = GridBagConstraints.VERTICAL;
 		gbc_lblSearch.insets = new Insets(0, 0, 5, 5);
-		gbc_lblSearch.gridx = 1;
+		gbc_lblSearch.gridx = 3;
 		gbc_lblSearch.gridy = 1;
 		contentPane.add(lblSearch, gbc_lblSearch);
 		
 		panel = new JPanel();
+		panel.setBackground(new Color(47, 79, 79));
 		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.anchor = GridBagConstraints.WEST;
-		gbc_panel.gridwidth = 8;
+		gbc_panel.gridwidth = 4;
+		gbc_panel.fill = GridBagConstraints.BOTH;
 		gbc_panel.insets = new Insets(0, 0, 5, 5);
-		gbc_panel.gridx = 2;
+		gbc_panel.gridx = 4;
 		gbc_panel.gridy = 1;
 		contentPane.add(panel, gbc_panel);
 		
@@ -145,6 +178,9 @@ public class InventoryGUI extends JFrame{
 		inventoryTable.getColumnModel().getColumn(5).setPreferredWidth(80);
 		inventoryTable.setAutoCreateRowSorter(true);
 		inventoryTable.setRowHeight(30);
+		JTableHeader header = inventoryTable.getTableHeader();
+		header.setBackground(new Color(255, 255, 255));
+		header.setFont(new Font("Helvetica", Font.PLAIN, 16));
 		
 		//create FileManager object for file handling
 		InventoryManager manager = new InventoryManager("inventoryData.csv",inventoryTable);
@@ -212,22 +248,23 @@ public class InventoryGUI extends JFrame{
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addComponent(searchTF, GroupLayout.PREFERRED_SIZE, 333, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(40, Short.MAX_VALUE))
+					.addGap(18)
+					.addComponent(searchTF, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addComponent(searchTF)
+				.addComponent(searchTF, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
 		);
 		panel.setLayout(gl_panel);
 
 		
 		scrollPane = new JScrollPane(null, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.gridheight = 9;
+		gbc_scrollPane.gridheight = 10;
 		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridwidth = 6;
+		gbc_scrollPane.gridwidth = 7;
 		gbc_scrollPane.gridx = 1;
 		gbc_scrollPane.gridy = 3;
 		contentPane.add(scrollPane, gbc_scrollPane);
@@ -237,9 +274,9 @@ public class InventoryGUI extends JFrame{
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
 		gbc_panel_1.gridwidth = 7;
 		gbc_panel_1.gridheight = 9;
-		gbc_panel_1.insets = new Insets(0, 0, 5, 0);
+		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
 		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 8;
+		gbc_panel_1.gridx = 9;
 		gbc_panel_1.gridy = 3;
 		contentPane.add(panel_1, gbc_panel_1);
 		
@@ -267,7 +304,8 @@ public class InventoryGUI extends JFrame{
 		lblPrice.setFont(new Font("Helvetica", Font.BOLD, 12));
 		
 		JButton addBtn = new JButton("Add");
-		
+		addBtn.setFont(new Font("Helvetica", Font.PLAIN, 12));
+		addBtn.setBackground(new Color(71, 230, 129));
 		addBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
@@ -291,7 +329,7 @@ public class InventoryGUI extends JFrame{
 								Item item = new Item(brandTF.getText().trim(),nameTF.getText().trim(), categoryCB.getSelectedItem().toString(),
 										price,stocks,inventoryTable);
 								//create array of objects containing the data to be added in the table
-								Object[] data = {item.getSKU(),item.getBrand(),item.getName(),item.getCategory(),item.getstocks(),
+								Object[] data = {item.getSKU(),item.getBrand(),item.getName(),item.getCategory(),item.getStocks(),
 										item.getPrice()};
 								//add the object array to a row in JTable via DefaultTableMOdel object
 								model.addRow(data);
@@ -324,6 +362,8 @@ public class InventoryGUI extends JFrame{
 		});
 		
 		deleteBtn = new JButton("Delete");
+		deleteBtn.setFont(new Font("Helvetica", Font.PLAIN, 12));
+		deleteBtn.setBackground(new Color(250, 97, 97));
 		deleteBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
@@ -350,6 +390,8 @@ public class InventoryGUI extends JFrame{
 		brandTF.setColumns(10);
 		
 		updateBtn = new JButton("Update");
+		updateBtn.setFont(new Font("Helvetica", Font.PLAIN, 12));
+		updateBtn.setBackground(new Color(250, 219, 97));
 		updateBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
@@ -392,6 +434,8 @@ public class InventoryGUI extends JFrame{
 		});
 
 		clearBtn = new JButton("Clear");
+		clearBtn.setFont(new Font("Helvetica", Font.PLAIN, 12));
+		clearBtn.setBackground(new Color(199, 209, 206));
 		clearBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				brandTF.setText("");
@@ -411,6 +455,40 @@ public class InventoryGUI extends JFrame{
 				.addGroup(gl_panel_1.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, gl_panel_1.createSequentialGroup()
+							.addGap(42)
+							.addComponent(lblRegistrationHeading, GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+							.addContainerGap())
+						.addGroup(Alignment.TRAILING, gl_panel_1.createSequentialGroup()
+							.addComponent(lblBrand, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+							.addContainerGap(172, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, gl_panel_1.createSequentialGroup()
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+								.addComponent(brandTF, GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addComponent(lblName)
+									.addPreferredGap(ComponentPlacement.RELATED, 144, GroupLayout.PREFERRED_SIZE))
+								.addComponent(nameTF, GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
+							.addGap(28))
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblcategory)
+								.addComponent(categoryCB, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE))
+							.addContainerGap(28, Short.MAX_VALUE))
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addComponent(lblStocks, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addGap(40))
+								.addComponent(stocksTF, GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
+							.addGap(129))
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addComponent(lblPrice, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, 40, GroupLayout.PREFERRED_SIZE))
+								.addComponent(priceTF, GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
+							.addGap(129))
 						.addGroup(gl_panel_1.createSequentialGroup()
 							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
 								.addComponent(addBtn, GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
@@ -418,61 +496,23 @@ public class InventoryGUI extends JFrame{
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING, false)
 								.addComponent(clearBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-								.addComponent(deleteBtn, GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)))
-						.addComponent(lblBrand, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap())
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addGap(45)
-					.addComponent(lblRegistrationHeading, GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-					.addGap(41))
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(brandTF)
-					.addGap(102))
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblName)
-					.addContainerGap(172, Short.MAX_VALUE))
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(nameTF, GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-					.addGap(28))
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblcategory)
-					.addContainerGap(155, Short.MAX_VALUE))
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(categoryCB, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(28, Short.MAX_VALUE))
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblStocks, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addGap(169))
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblPrice, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(169, Short.MAX_VALUE))
-				.addGroup(gl_panel_1.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING)
-						.addComponent(priceTF, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
-						.addComponent(stocksTF, GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
-					.addGap(129))
+								.addComponent(deleteBtn, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE))
+							.addContainerGap())))
 		);
 		gl_panel_1.setVerticalGroup(
 			gl_panel_1.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_1.createSequentialGroup()
+					.addContainerGap()
 					.addComponent(lblRegistrationHeading)
-					.addGap(7)
+					.addGap(9)
 					.addComponent(lblBrand, GroupLayout.PREFERRED_SIZE, 13, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(brandTF, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(11)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(lblName)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(nameTF, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
-					.addGap(16)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(lblcategory)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(categoryCB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -484,7 +524,7 @@ public class InventoryGUI extends JFrame{
 					.addComponent(lblPrice, GroupLayout.PREFERRED_SIZE, 13, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(priceTF, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
-					.addGap(36)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
 						.addComponent(addBtn, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
 						.addComponent(deleteBtn, GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE))
@@ -492,7 +532,7 @@ public class InventoryGUI extends JFrame{
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
 						.addComponent(updateBtn, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
 						.addComponent(clearBtn, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE))
-					.addGap(46))
+					.addGap(9))
 		);
 		panel_1.setLayout(gl_panel_1);
 		

@@ -21,9 +21,6 @@ public class Item {
 	private int stocks;
 	private JTable table;
 	
-	public static void main(String args[]) {
-
-	}
 	public Item() {
 	}
 	
@@ -34,39 +31,87 @@ public class Item {
 		setName(nameInput);
 		setPrice(priceInput);
 		setCategory(categoryInput);
-		setstocks(stocksInput);
+		setStocks(stocksInput);
 		setSKU();
 	}
-	
+	/**
+	======================================================================
+	METHOD : getSKU
+	DESCRIPTION : returns the generated SKU of the item
+	======================================================================
+	*/
 	public String getSKU() {
 		return SKU;
 	}
+	/**
+	======================================================================
+	METHOD : getBrand
+	DESCRIPTION : returns the brand of the item
+	======================================================================
+	*/
 	public String getBrand() {
 		return brand;
 	}
+	/**
+	======================================================================
+	METHOD : getName
+	DESCRIPTION : returns the name of the item
+	======================================================================
+	*/
 	public String getName() {
 		return name;
 	}
-	
+	/**
+	======================================================================
+	METHOD : getPrice
+	DESCRIPTION : returns the price of the item
+	======================================================================
+	*/
 	public double getPrice() {
 		return price;
 	}
-	
+	/**
+	======================================================================
+	METHOD : getCategory
+	DESCRIPTION : returns the category of the item
+	======================================================================
+	*/
 	public String getCategory() {
 		return category;
 	}
-	
-	public int getstocks() {
+	/**
+	======================================================================
+	METHOD : getStocks
+	DESCRIPTION : returns the stocks of the item
+	======================================================================
+	*/
+	public int getStocks() {
 		return stocks;
 	}
+	/**
+	======================================================================
+	METHOD : getTable
+	DESCRIPTION : returns the table where the item is added
+	======================================================================
+	*/
 	public JTable getTable() {
 		return table;
 	}
-	
+	/**
+	======================================================================
+	METHOD : setTable
+	DESCRIPTION : assigns the table for this class to be used
+	======================================================================
+	*/
 	public void setTable(JTable tableInput) {
 		table = tableInput;
 	}
-	
+	/**
+	======================================================================
+	METHOD : setSKU
+	DESCRIPTION : generates an SKU for the item
+	======================================================================
+	*/
 	private void setSKU() {
 		String name = this.getName();
 		String brand = this.getBrand();
@@ -94,7 +139,12 @@ public class Item {
 		}
 		this.SKU = SKU;
 	}
-	
+	/**
+	======================================================================
+	METHOD : createMap
+	DESCRIPTION : creates a HashMap of SKUs to check for any repeated SKU code
+	======================================================================
+	*/
 	public HashMap<String,Integer> createMap() {
 		HashMap<String,Integer> map = new HashMap<String,Integer>();
 		for(int i=0; i<table.getRowCount(); i++) {
@@ -111,24 +161,49 @@ public class Item {
 		}
 		return map;
 	}
-	
+	/**
+	======================================================================
+	METHOD : setBrand
+	DESCRIPTION : sets the brand for this item
+	======================================================================
+	*/
 	public void setBrand(String brandInput) {
 		this.brand = brandInput.toUpperCase().trim();
 	}
-	
+	/**
+	======================================================================
+	METHOD : setName
+	DESCRIPTION : sets the name for this item
+	======================================================================
+	*/
 	public void setName(String nameInput) {
 		this.name = nameInput.toUpperCase().trim();
 	}
-	
+	/**
+	======================================================================
+	METHOD : setPrice
+	DESCRIPTION : sets the price for this item
+	======================================================================
+	*/
 	public void setPrice(double priceInput) {
 		this.price = priceInput;
 	}
-	
+	/**
+	======================================================================
+	METHOD : setCategory
+	DESCRIPTION : sets the category for this item
+	======================================================================
+	*/
 	public void setCategory(String categoryInput) {
 		this.category = categoryInput.toUpperCase().trim();
 	}
-	
-	public void setstocks(int stocksInput) {
+	/**
+	======================================================================
+	METHOD : setCategory
+	DESCRIPTION : sets the stocks for this item
+	======================================================================
+	*/
+	public void setStocks(int stocksInput) {
 		this.stocks = stocksInput;
 	}
 	
