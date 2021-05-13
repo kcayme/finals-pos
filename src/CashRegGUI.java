@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
 
@@ -66,6 +65,7 @@ public class CashRegGUI extends JFrame {
 		contentPane.add(Label);
 		
 		DecimalFormat formatter = new DecimalFormat("#,###.00");
+		@SuppressWarnings("unused")
 		CashRegister cashReg = new CashRegister();
 		String displayCash = formatter.format(CashRegister.getCurrentBalance());
 		JLabel contentCashOnHand= new JLabel("P " + displayCash);

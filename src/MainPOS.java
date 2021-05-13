@@ -216,6 +216,11 @@ public class MainPOS {
 			public void keyReleased(KeyEvent e) {
 				DefaultTableModel model = (DefaultTableModel)menuTable.getModel();
 				TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
+				List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+				sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+				sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+				sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
+				sorter.setSortKeys(sortKeys);
 				menuTable.setRowSorter(sorter);
 				sorter.setRowFilter(RowFilter.regexFilter(searchTF.getText().toUpperCase().trim()));
 			}
@@ -238,6 +243,11 @@ public class MainPOS {
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)menuTable.getModel();
 				TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
+				List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+				sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+				sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+				sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
+				sorter.setSortKeys(sortKeys);
 				menuTable.setRowSorter(sorter);
 				sorter.setRowFilter(RowFilter.regexFilter(""));
 			}
@@ -636,6 +646,8 @@ public class MainPOS {
 					        	double subTotal = quantity*price;
 					        	model.setValueAt(quantity, row, 2);
 					        	model.setValueAt(subTotal, row, 3);
+					        	double total = manager.getTotal(checkoutTable);
+					        	lblTotalValue.setText("Php " + formatter.format(total));
 				        	}
 				        	else {
 				        		JOptionPane.showMessageDialog(null, "Desired quantity exceeds current stocks.", "Insufficient Stocks", JOptionPane.ERROR_MESSAGE);
@@ -755,6 +767,7 @@ public class MainPOS {
 				        		checkoutModel.setRowCount(0);
 				        		menuModel.setRowCount(0);
 				        		manager.readFile();
+				        		lblTotalValue.setText("Php 0" + formatter.format(0));
 			        		}
 			        	}
 				        catch(Exception e1){
@@ -776,7 +789,7 @@ public class MainPOS {
 				DefaultTableModel model = (DefaultTableModel)checkoutTable.getModel();
 				if(model.getRowCount() != 0) {
 				model.setRowCount(0);
-				lblTotalValue.setText("Php " + formatter.format(0));
+				lblTotalValue.setText("Php 0" + formatter.format(0));
 				JOptionPane.showMessageDialog(messageFrame, "Checkout emptied.");
 				}
 				else {
@@ -799,7 +812,12 @@ public class MainPOS {
 								model.removeRow(i[j]);
 							}
 							double total = manager.getTotal(checkoutTable);
-				        	lblTotalValue.setText("Php " + formatter.format(total));
+							if(total != 0) {
+								lblTotalValue.setText("Php " + formatter.format(total));
+							}
+							else {
+								lblTotalValue.setText("Php 0" + formatter.format(total));
+							}
 						}
 						else {
 							JOptionPane.showMessageDialog(messageFrame, "Select item to remove.");

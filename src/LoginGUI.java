@@ -2,7 +2,6 @@ import java.awt.Dimension;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +24,7 @@ import javax.swing.border.EmptyBorder;
  Date:               			By:          				Description:
  April 29, 2021			Amber Brinette U. Lim			Creation of the class and Logic. 
  May 1, 2021			Miguel Edwin P. Salubre			Updated the Logic of method login to Connect between Main Menu, this class and 
- 									Inventory/Cash Register GUI.
+ 														Inventory/Cash Register GUI.
  May 3, 2021			Karl Jensen F. Cayme			Updated the Logic on login and added methods setOptionShow
  May 4, 2021			Karl Jensen F. Cayme			Added method doOption.				
 ======================================================================

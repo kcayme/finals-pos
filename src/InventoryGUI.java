@@ -23,7 +23,6 @@ import java.awt.Font;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.Icon;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JComboBox;
 import java.awt.event.ActionListener;
@@ -79,14 +78,6 @@ public class InventoryGUI extends JFrame{
 	private JTextField priceTF;
 	private JLabel lblIcon;
 
-	/**
-	 * Create the frame.
-	 */
-	
-	public static void main(String[] args) {
-		InventoryGUI inventory = new InventoryGUI(new JTable(), new JTable(), new JLabel());
-		inventory.setVisible(true);
-	}
 	public InventoryGUI(JTable menuTable, JTable checkoutTable, JLabel lblTotalValue) {
 		
 		Image inventoryImg = new ImageIcon(this.getClass().getResource("/inventory.png")).getImage();
@@ -176,24 +167,26 @@ public class InventoryGUI extends JFrame{
 		inventoryTable.getColumnModel().getColumn(3).setPreferredWidth(124);
 		inventoryTable.getColumnModel().getColumn(4).setPreferredWidth(80);
 		inventoryTable.getColumnModel().getColumn(5).setPreferredWidth(80);
-		inventoryTable.setAutoCreateRowSorter(true);
 		inventoryTable.setRowHeight(30);
-		JTableHeader header = inventoryTable.getTableHeader();
-		header.setBackground(new Color(255, 255, 255));
-		header.setFont(new Font("Helvetica", Font.PLAIN, 16));
+		inventoryTable.setAutoCreateRowSorter(true);
+		inventoryTable.setRowSelectionAllowed(true);
 		
 		//create FileManager object for file handling
 		InventoryManager manager = new InventoryManager("inventoryData.csv",inventoryTable);
 		manager.createFile();
-		
+				
 		MenuManager menu = new MenuManager("inventoryData.csv",menuTable);
-		
+				
 		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>((DefaultTableModel)inventoryTable.getModel());
 		inventoryTable.setRowSorter(sorter);
 		List<RowSorter.SortKey> sortKeys = new ArrayList<>();
 		sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
 		sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
-		sorter.setSortKeys(sortKeys);
+		sorter.setSortKeys(sortKeys);				
+				
+		JTableHeader header = inventoryTable.getTableHeader();
+		header.setBackground(new Color(255, 255, 255));
+		header.setFont(new Font("Helvetica", Font.PLAIN, 16));
 		
 		JComboBox<String> categoryCB = new JComboBox<String>();
 		categoryCB.setFont(new Font("Helvetica", Font.PLAIN, 12));
@@ -209,7 +202,8 @@ public class InventoryGUI extends JFrame{
 			public void mouseClicked(MouseEvent e) {
 				//use DefaultTableModel object to manage contents of the JTable, this is necessary
 				DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
-				int i = inventoryTable.getSelectedRow();
+				int clickedIndex = inventoryTable.getSelectedRow();
+				int i = inventoryTable.convertRowIndexToModel(clickedIndex);
 				brandTF.setText(model.getValueAt(i, 1).toString());
 				nameTF.setText(model.getValueAt(i, 2).toString());
 				String originalCategory = model.getValueAt(i, 3).toString();
@@ -333,7 +327,6 @@ public class InventoryGUI extends JFrame{
 										item.getPrice()};
 								//add the object array to a row in JTable via DefaultTableMOdel object
 								model.addRow(data);
-								
 								JOptionPane.showMessageDialog(messageFrame, "Generated SKU: " + item.getSKU(), "Product Registration Successful", 
 										JOptionPane.INFORMATION_MESSAGE);
 							}
@@ -347,6 +340,7 @@ public class InventoryGUI extends JFrame{
 							stocksTF.setText("");
 							priceTF.setText("");
 							categoryCB.setSelectedIndex(0);
+							
 						}
 					}
 					else {
@@ -368,7 +362,8 @@ public class InventoryGUI extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel)inventoryTable.getModel();
 				setAlwaysOnTop(false);
-				int i = inventoryTable.getSelectedRow();
+				int clickedIndex = inventoryTable.getSelectedRow();
+				int i = inventoryTable.convertRowIndexToModel(clickedIndex);
 				if(i == -1) {
 					JOptionPane.showMessageDialog(messageFrame, "Select a row to delete", "Error", JOptionPane.ERROR_MESSAGE);
 				}
@@ -398,7 +393,8 @@ public class InventoryGUI extends JFrame{
 				setAlwaysOnTop(false);
 				//try to parse the Strings for stocks and price and catch error
 				try {
-					int i = inventoryTable.getSelectedRow();
+					int clickedIndex = inventoryTable.getSelectedRow();
+					int i = inventoryTable.convertRowIndexToModel(clickedIndex);
 					//Row datas are assigned to new variables for shorter condition syntax in the next if-statement
 					String brandOld = model.getValueAt(i, 1).toString();
 					String nameOld = model.getValueAt(i, 2).toString();
@@ -540,6 +536,16 @@ public class InventoryGUI extends JFrame{
 		    @Override
 		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
 		    	setAlwaysOnTop(false);
+		    	DefaultTableModel inventoryModel = (DefaultTableModel)inventoryTable.getModel();
+		    	TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(inventoryModel);
+		    	List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+				sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+				sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+				sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
+				sorter.setSortKeys(sortKeys);
+		    	inventoryTable.setRowSorter(sorter);
+				sorter.setRowFilter(RowFilter.regexFilter(""));
+				
 		    	manager.setTable(inventoryTable);
 		    	manager.updateFile();
 		    	DefaultTableModel menuModel = (DefaultTableModel) menuTable.getModel();
@@ -549,7 +555,7 @@ public class InventoryGUI extends JFrame{
 		    	DecimalFormat formatter = new DecimalFormat("#,###.00");
 		    	menu.updateCheckout(checkoutTable);
 		    	double updatedTotal = menu.getTotal(checkoutTable);
-		    	lblTotalValue.setText("Php " + formatter.format(updatedTotal));
+		    	lblTotalValue.setText("Php 0" + formatter.format(updatedTotal));
 	        	dispose();
 		    }
 		});
